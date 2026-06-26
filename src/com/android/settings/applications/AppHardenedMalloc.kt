@@ -42,7 +42,7 @@ class AppHardenedMallocFragment : AswExploitProtectionFragment<AswUseHardenedMal
 
     override fun updateFooter(fp: FooterPreference) {
         fp.setTitle(R.string.aep_hmalloc_footer)
-        setLearnMoreLink(fp, "https://grapheneos.org/features#exploit-mitigations")
+        setLearnMoreLink(fp, "https://guardtalk.io/features#exploit-mitigations")
     }
 }
 

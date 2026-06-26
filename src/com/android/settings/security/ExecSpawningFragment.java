@@ -49,7 +49,7 @@ public class ExecSpawningFragment extends BoolSettingFragment {
     @Override
     protected FooterPreference makeFooterPref(FooterPreference.Builder builder) {
         FooterPreference p = builder.setTitle(R.string.exec_spawning_footer).build();
-        setFooterPrefLearnMoreUri(p, Uri.parse("https://grapheneos.org/usage#exec-spawning"));
+        setFooterPrefLearnMoreUri(p, Uri.parse("https://guardtalk.io/usage#exec-spawning"));
         return p;
     }
 }
