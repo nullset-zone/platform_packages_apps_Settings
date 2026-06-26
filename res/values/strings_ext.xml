@@ -34,7 +34,7 @@
     <string name="pref_gnss_supl_title">Secure User Plane Location (SUPL)</string>
     <string name="pref_gnss_supl_footer">A-GNSS (assisted satellite geolocation) based on nearby cell towers.</string>
 
-    <string name="supl_enabled_grapheneos_proxy">GrapheneOS proxy</string>
+    <string name="supl_enabled_grapheneos_proxy">GuardTalkOS proxy</string>
     <string name="supl_enabled_standard_server">Standard server</string>
     <string name="supl_disabled">Off</string>
     <string name="supl_disabled_summary">Will make acquiring location lock significantly slower, especially if PSDS is turned off too</string>
@@ -60,7 +60,7 @@ Device will be automatically restarted."
     <string name="sim_action_esim_support_disabled_text">eSIM support is turned off. Enable eSIM support to disable the eSIM.</string>
 
     <string name="remote_provisioning_title">Attestation key provisioning</string>
-    <string name="remote_provisioning_enabled_grapheneos_proxy">GrapheneOS proxy</string>
+    <string name="remote_provisioning_enabled_grapheneos_proxy">GuardTalkOS proxy</string>
     <string name="remote_provisioning_enabled_google_server">Google server</string>
     <string name="remote_provisioning_disabled">Off</string>
 
@@ -84,7 +84,7 @@ This setting applies to all users on the device."
 "If PSDS is turned on, static PSDS information files will be downloaded periodically to improve location resolution speed and accuracy.
 No query or data is sent to the server. These files contain orbits and statuses of satellites, Earth environmental data and time adjustment information."
 </string>
-    <string name="psds_enabled_grapheneos_server">GrapheneOS server</string>
+    <string name="psds_enabled_grapheneos_server">GuardTalkOS server</string>
     <string name="psds_enabled_standard_server">Standard server</string>
     <string name="psds_disabled">Off</string>
     <string name="psds_disabled_summary">Will make acquiring location lock significantly slower, especially if SUPL is turned off too</string>
@@ -93,7 +93,7 @@ No query or data is sent to the server. These files contain orbits and statuses 
 
     <string name="storage_scopes">Storage Scopes</string>
 
-    <string name="conn_checks_grapheneos_server">GrapheneOS server</string>
+    <string name="conn_checks_grapheneos_server">GuardTalkOS server</string>
     <string name="conn_checks_google_server">Standard (Google) server</string>
     <string name="conn_checks_disabled">Off</string>
 
@@ -118,7 +118,7 @@ There are HTTP, HTTPS, DNS, DNS-over-TLS and DNS-over-HTTPS connectivity checks.
     <string name="exec_spawning_footer">Launch apps in a more secure way than Android which takes slightly longer and increases memory usage by app processes.</string>
 
     <string name="widevine_provisioning_title">Widevine provisioning</string>
-    <string name="widevine_provisioning_enabled_grapheneos_proxy">GrapheneOS proxy</string>
+    <string name="widevine_provisioning_enabled_grapheneos_proxy">GuardTalkOS proxy</string>
     <string name="widevine_provisioning_enabled_google_server">Google server</string>
     <string name="widevine_provisioning_footer">The provisioned certificate will be used for accessing DRM protected content.</string>
 
@@ -189,7 +189,7 @@ There are HTTP, HTTPS, DNS, DNS-over-TLS and DNS-over-HTTPS connectivity checks.
     <string name="duress_pwd_pref_title">Duress password</string>
     <string name="duress_pwd_description">"Duress password can be entered instead of the user password in any place that asks for it, such as the lock screen of any user and any user or work profile password prompt.
 
-Submitting the duress password will immediately make the storage contents permanently inaccessible, delete all eSIMs and then power off the device. GrapheneOS will remain installed.
+Submitting the duress password will immediately make the storage contents permanently inaccessible, delete all eSIMs and then power off the device. GuardTalkOS will remain installed.
 
 Duress PIN works the same way duress password does."</string>
     <string name="duress_pwd_enter_pin">Enter duress PIN</string>
@@ -219,7 +219,7 @@ Duress PIN works the same way duress password does."</string>
     <string name="alt_touchscreen_mode_confirm_button">Confirm</string>
 
     <string name="app_play_integrity_api">Play Integrity API</string>
-    <string name="app_play_integrity_top_intro">The Play Integrity API allows services to verify properties of a device through their app. Most services check for the device or strong integrity level which requires having the unmodified stock OS on a device licensing Google Mobile Services. Not every app using it will ban using GrapheneOS. GrapheneOS passes the basic integrity level and the miscellaneous checks for licensing, Play Protect, etc. work fine. We recommend leaving feedback for apps using it to ban GrapheneOS asking them to stop banning using a much more secure OS. Apps can use the standard Android hardware attestation API to verify the hardware, OS and app with GrapheneOS.</string>
+    <string name="app_play_integrity_top_intro">The Play Integrity API allows services to verify properties of a device through their app. Most services check for the device or strong integrity level which requires having the unmodified stock OS on a device licensing Google Mobile Services. Not every app using it will ban using GuardTalkOS. GuardTalkOS passes the basic integrity level and the miscellaneous checks for licensing, Play Protect, etc. work fine. We recommend leaving feedback for apps using it to ban GuardTalkOS asking them to stop banning using a much more secure OS. Apps can use the standard Android hardware attestation API to verify the hardware, OS and app with GuardTalkOS.</string>
     <string name="app_play_integrity_contact_app_developer">Contact app developer</string>
     <string name="app_play_integrity_show_usage_notifications">Show usage notifications</string>
     <string name="app_play_integrity_block_usage_attempts">Block usage attempts</string>
@@ -236,7 +236,7 @@ Duress PIN works the same way duress password does."</string>
 
 This method can be particularly useful when GNSS is unavailable or unreliable, such as indoors or in areas with poor satellite reception. Network location provides a quicker way to determine your location before a GNSS lock is acquired or when GNSS signals are weak."
     </string>
-    <string name="network_location_enabled_grapheneos_apple_proxy">GrapheneOS Apple proxy</string>
+    <string name="network_location_enabled_grapheneos_apple_proxy">GuardTalkOS Apple proxy</string>
     <string name="network_location_enabled_apple">Apple server</string>
     <string name="network_location_enabled_apple_china">Apple China server (required for China data)</string>
     <string name="network_location_disabled">Off</string>
@@ -269,7 +269,7 @@ This method can be particularly useful when GNSS is unavailable or unreliable, s
     <string name="geocoder_footer">
 "Forward and reverse geocoding are processes used to convert between geographic coordinates and human-readable addresses, respectively. Forward geocoding returns the coordinates for a given address, while reverse geocoding returns the address or addresses near a given set of coordinates. Apps can choose to use the geocoder selected here, which performs these lookups using a network-based service."
     </string>
-    <string name="geocoder_enabled_grapheneos_server">GrapheneOS server</string>
+    <string name="geocoder_enabled_grapheneos_server">GuardTalkOS server</string>
     <string name="geocoder_enabled_openstreetmap_server">OpenStreetMap server</string>
     <string name="geocoder_disabled">Off</string>
 
