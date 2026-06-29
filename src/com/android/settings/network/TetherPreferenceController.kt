@@ -64,8 +64,22 @@ constructor(
      * Always returns available here to avoid ANR.
      * - Actual UI visibility is handled in [onViewCreated].
      * - Search visibility is handled in [updateNonIndexableKeys].
+     *
+     * T-SETTINGS-REDUCE2 (GuardTalkOS): Hotspot & Tethering is out of scope for
+     * this minimal image (radio excised; Wi-Fi hotspot is not a GuardTalk UX
+     * surface). The controller has no AOSP config_* visibility bool to override
+     * (verified), and it deliberately returns AVAILABLE to avoid ANR, so
+     * force-hide via the GuardTalkSettingsOverlay config_show_sim_info=false
+     * flag (radio excised). Reversible: set config_show_sim_info=true to
+     * restore the upstream AVAILABLE-then-onViewCreated flow.
      */
-    override fun getAvailabilityStatus() = AVAILABLE
+    override fun getAvailabilityStatus(): Int {
+        if (!mContext.resources.getBoolean(
+                com.android.settings.R.bool.config_show_sim_info)) {
+            return UNSUPPORTED_ON_DEVICE
+        }
+        return AVAILABLE
+    }
 
     override fun displayPreference(screen: PreferenceScreen) {
         super.displayPreference(screen)
@@ -74,7 +88,19 @@ constructor(
 
     override fun onViewCreated(viewLifecycleOwner: LifecycleOwner) {
         isTetherAvailableFlow.collectLatestWithLifecycle(viewLifecycleOwner) {
-            preference?.isVisible = it
+            // T-HOTSPOT-LEGACY: getAvailabilityStatus() returns UNSUPPORTED_ON_DEVICE
+            // when config_show_sim_info=false (radio excised), but this controller
+            // deliberately returns AVAILABLE there to avoid ANR and defers real
+            // visibility to onViewCreated. isTetherAvailable() returns TRUE even
+            // without a SIM (Wi-Fi hotspot needs no radio), so without this guard
+            // the row reappears despite getAvailabilityStatus() saying hidden.
+            // Gate on config_show_sim_info to match the Catalyst path (TetherScreen).
+            if (!mContext.resources.getBoolean(
+                    com.android.settings.R.bool.config_show_sim_info)) {
+                preference?.isVisible = false
+            } else {
+                preference?.isVisible = it
+            }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -106,7 +132,13 @@ constructor(
     }
 
     override fun updateNonIndexableKeys(keys: MutableList<String>) {
-        if (!TetherUtil.isTetherAvailable(mContext)) {
+        // T-SETTINGS-REDUCE2: mirror the getAvailabilityStatus() guard so the
+        // entry is also de-indexed from Settings search when the radio-excised
+        // config_show_sim_info=false overlay is active. Without this, the row
+        // is hidden in the UI but still appears in search results.
+        if (!mContext.resources.getBoolean(
+                com.android.settings.R.bool.config_show_sim_info) ||
+            !TetherUtil.isTetherAvailable(mContext)) {
             keys += preferenceKey
         }
     }

@@ -61,7 +61,17 @@ open class TetherScreen :
             context.getText(Utils.getTetheringLabel(tetheringManager))
         }
 
-    override fun isAvailable(context: Context) = TetherUtil.isTetherAvailable(context)
+    override fun isAvailable(context: Context): Boolean {
+        // T-HOTSPOT-CATALYST: mirror the legacy TetherPreferenceController guard.
+        // The Catalyst path (TetherScreen) does NOT consult config_show_sim_info,
+        // so on a radio-excised GuardTalkOS image (config_show_sim_info=false)
+        // the entry renders via this ungated screen despite the legacy fix.
+        // Gate it here to hide the entry from both nav + search.
+        if (!context.resources.getBoolean(R.bool.config_show_sim_info)) {
+            return false
+        }
+        return TetherUtil.isTetherAvailable(context)
+    }
 
     override fun isEnabled(context: Context) = super<PreferenceRestrictionMixin>.isEnabled(context)
 

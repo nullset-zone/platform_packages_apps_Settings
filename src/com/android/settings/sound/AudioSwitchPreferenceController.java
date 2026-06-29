@@ -230,6 +230,16 @@ public abstract class AudioSwitchPreferenceController extends BasePreferenceCont
      */
     protected List<BluetoothDevice> getConnectedHfpDevices() {
         final List<BluetoothDevice> connectedDevices = new ArrayList<>();
+        // T-SETTINGS-REDUCE2 (GuardTalkOS): when the BT HAL is excised
+        // (bt-excised.mk) the LocalBluetoothManager is null and mProfileManager
+        // is left null by the constructor. updateState() is still invoked from
+        // AudioManagerAudioDeviceCallback / WiredHeadsetBroadcastReceiver, so
+        // guard here to avoid an NPE on mProfileManager.getHeadsetProfile().
+        // Reversible: with BT present mProfileManager is non-null and this guard
+        // is a no-op.
+        if (mProfileManager == null) {
+            return connectedDevices;
+        }
         final HeadsetProfile hfpProfile = mProfileManager.getHeadsetProfile();
         if (hfpProfile == null) {
             return connectedDevices;
@@ -248,6 +258,11 @@ public abstract class AudioSwitchPreferenceController extends BasePreferenceCont
      * (STATE_DISCONNECTED, STATE_CONNECTING, STATE_CONNECTED,  STATE_DISCONNECTING)
      */
     protected List<BluetoothDevice> getConnectedA2dpDevices() {
+        // T-SETTINGS-REDUCE2: guard null mProfileManager (BT excised). See
+        // getConnectedHfpDevices() above.
+        if (mProfileManager == null) {
+            return new ArrayList<>();
+        }
         final A2dpProfile a2dpProfile = mProfileManager.getA2dpProfile();
         if (a2dpProfile == null) {
             return new ArrayList<>();
@@ -260,6 +275,11 @@ public abstract class AudioSwitchPreferenceController extends BasePreferenceCont
      */
     protected List<BluetoothDevice> getConnectedLeAudioDevices() {
         final List<BluetoothDevice> connectedDevices = new ArrayList<>();
+        // T-SETTINGS-REDUCE2: guard null mProfileManager (BT excised). See
+        // getConnectedHfpDevices() above.
+        if (mProfileManager == null) {
+            return connectedDevices;
+        }
         final LeAudioProfile leAudioProfile = mProfileManager.getLeAudioProfile();
         if (leAudioProfile == null) {
             Log.d(TAG, "LeAudioProfile is null");
@@ -299,6 +319,11 @@ public abstract class AudioSwitchPreferenceController extends BasePreferenceCont
      */
     protected List<BluetoothDevice> getConnectedHearingAidDevices() {
         final List<BluetoothDevice> connectedDevices = new ArrayList<>();
+        // T-SETTINGS-REDUCE2: guard null mProfileManager (BT excised). See
+        // getConnectedHfpDevices() above.
+        if (mProfileManager == null) {
+            return connectedDevices;
+        }
         final HearingAidProfile hapProfile = mProfileManager.getHearingAidProfile();
         if (hapProfile == null) {
             return connectedDevices;
@@ -321,6 +346,11 @@ public abstract class AudioSwitchPreferenceController extends BasePreferenceCont
      * Find active hearing aid device
      */
     protected BluetoothDevice findActiveHearingAidDevice() {
+        // T-SETTINGS-REDUCE2: guard null mProfileManager (BT excised). See
+        // getConnectedHfpDevices() above.
+        if (mProfileManager == null) {
+            return null;
+        }
         final HearingAidProfile hearingAidProfile = mProfileManager.getHearingAidProfile();
 
         if (hearingAidProfile != null) {
@@ -343,6 +373,11 @@ public abstract class AudioSwitchPreferenceController extends BasePreferenceCont
      * Find active LE Audio device
      */
     protected BluetoothDevice findActiveLeAudioDevice() {
+        // T-SETTINGS-REDUCE2: guard null mProfileManager (BT excised). See
+        // getConnectedHfpDevices() above.
+        if (mProfileManager == null) {
+            return null;
+        }
         final LeAudioProfile leAudioProfile = mProfileManager.getLeAudioProfile();
 
         if (leAudioProfile != null) {

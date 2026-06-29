@@ -28,6 +28,20 @@ public class RemoteProvisioningPrefController extends IntSettingPrefController {
         super(ctx, key, RemoteKeyProvisioningSettings.SERVER_SETTING);
     }
 
+    // T-ATTEST-LOCK: hide the "Attestation key provisioning" row.
+    // RemoteKeyProvisioningSettings.getServerUrlOverride() is forced to always
+    // return the GuardTalkOS proxy URL (see that class), making the
+    // STANDARD_SERVER radio option a no-op even if selected. Hiding the row
+    // removes the user-facing choice entirely. The IntSettingPrefController
+    // base delegates to ExtSettingControllerHelper.getAvailabilityStatus();
+    // overriding here returns UNSUPPORTED_ON_DEVICE, hiding the preference and
+    // de-indexing it from Settings search. Reversible: restore
+    // `return helper.getAvailabilityStatus();` to revert (Law 11).
+    @Override
+    public int getAvailabilityStatus() {
+        return UNSUPPORTED_ON_DEVICE;
+    }
+
     @Override
     protected void getEntries(Entries entries) {
         entries.add(R.string.remote_provisioning_enabled_grapheneos_proxy, RemoteKeyProvisioningSettings.GRAPHENEOS_PROXY);

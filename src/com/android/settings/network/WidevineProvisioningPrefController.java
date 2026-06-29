@@ -30,6 +30,20 @@ public class WidevineProvisioningPrefController extends IntSettingPrefController
         super(ctx, key, WidevineProvisioningSettings.SERVER_SETTING);
     }
 
+    // T-WIDEVINE-LOCK: hide the "Widevine provisioning" row.
+    // WidevineProvisioningSettings.getServerHostnameOverride() is forced to
+    // always return the GuardTalkOS proxy hostname (see that class), making
+    // the WV_STANDARD_SERVER radio option a no-op even if selected. Hiding the
+    // row removes the user-facing choice entirely. The IntSettingPrefController
+    // base delegates to ExtSettingControllerHelper.getAvailabilityStatus();
+    // overriding here returns UNSUPPORTED_ON_DEVICE, hiding the preference and
+    // de-indexing it from Settings search. Reversible: restore
+    // `return helper.getAvailabilityStatus();` to revert (Law 11).
+    @Override
+    public int getAvailabilityStatus() {
+        return UNSUPPORTED_ON_DEVICE;
+    }
+
     @Override
     public void addPrefsAfterList(RadioButtonPickerFragment2 fragment, PreferenceScreen screen) {
         addFooterPreference(screen, R.string.widevine_provisioning_footer);

@@ -61,6 +61,16 @@ public class TopLevelWallpaperPreferenceController extends BasePreferenceControl
         super.displayPreference(screen);
         Preference preference = screen.findPreference(getPreferenceKey());
         preference.setTitle(getTitle());
+        // Guard: do not register a split-pane rule when the wallpaper picker
+        // package is empty/null. The empty string is the documented "hide
+        // wallpaper" signal (see GuardTalkSettingsOverlay config.xml) and
+        // getAvailabilityStatus() already returns UNSUPPORTED_ON_DEVICE in that
+        // case, but displayPreference() runs before the availability filter
+        // removes the row — passing an empty package to SplitPairFilter would
+        // throw IllegalArgumentException: Package name must not be empty.
+        if (TextUtils.isEmpty(mWallpaperPackage)) {
+            return;
+        }
         ActivityEmbeddingRulesController.registerTwoPanePairRuleForSettingsHome(
                 mContext,
                 getComponentName(),

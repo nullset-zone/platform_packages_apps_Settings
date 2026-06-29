@@ -167,6 +167,10 @@ public class HandsFreeProfileOutputPreferenceController extends AudioSwitchPrefe
         if (!Utils.isAudioModeOngoingCall(mContext)) {
             return;
         }
+        // T-SETTINGS-REDUCE2: guard null mProfileManager (BT excised).
+        if (mProfileManager == null) {
+            return;
+        }
         final HearingAidProfile hapProfile = mProfileManager.getHearingAidProfile();
         final HeadsetProfile hfpProfile = mProfileManager.getHeadsetProfile();
         if (hapProfile != null && hfpProfile != null && device == null) {
@@ -184,6 +188,12 @@ public class HandsFreeProfileOutputPreferenceController extends AudioSwitchPrefe
     public BluetoothDevice findActiveDevice() {
         BluetoothDevice haActiveDevice = findActiveHearingAidDevice();
         BluetoothDevice leAudioActiveDevice = findActiveLeAudioDevice();
+        // T-SETTINGS-REDUCE2: guard null mProfileManager (BT excised). The base
+        // helpers above already no-op, but this override also dereferences
+        // mProfileManager directly -- guard it too.
+        if (mProfileManager == null) {
+            return null;
+        }
         final HeadsetProfile headsetProfile = mProfileManager.getHeadsetProfile();
 
         if (haActiveDevice != null) {

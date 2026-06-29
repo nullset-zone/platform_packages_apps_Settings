@@ -122,12 +122,23 @@ public class MediaOutputPreferenceController extends AudioSwitchPreferenceContro
     @Override
     public void onStart() {
         super.onStart();
+        // T-SOUND-CRASH: when BT is excised, LocalMediaManager's internal
+        // InfoMediaManager is null and registerCallback() NPEs. Skip the
+        // callback registration entirely. The controller is already hidden
+        // by displayPreference() (no connected BT devices), so this is safe.
         if (mLocalBluetoothLeBroadcast != null) {
             mLocalBluetoothLeBroadcast.registerServiceCallBack(
                     mContext.getMainExecutor(), mBroadcastCallback);
         }
-        if (mLocalMediaManager != null) {
-            mLocalMediaManager.registerCallback(this);
+        if (mLocalMediaManager != null && mProfileManager != null) {
+            try {
+                mLocalMediaManager.registerCallback(this);
+            } catch (NullPointerException e) {
+                // InfoMediaManager is null inside LocalMediaManager when BT
+                // is excised. Log and continue — the controller is hidden anyway.
+                android.util.Log.w(TAG, "Skipped MediaOutput callback registration"
+                        + " (BT excised; InfoMediaManager null)", e);
+            }
         }
     }
 
@@ -235,6 +246,12 @@ public class MediaOutputPreferenceController extends AudioSwitchPreferenceContro
     public BluetoothDevice findActiveDevice() {
         BluetoothDevice haActiveDevice = findActiveHearingAidDevice();
         BluetoothDevice leAudioActiveDevice = findActiveLeAudioDevice();
+        // T-SETTINGS-REDUCE2: guard null mProfileManager (BT excised). The base
+        // helpers above already no-op, but this override also dereferences
+        // mProfileManager directly -- guard it too.
+        if (mProfileManager == null) {
+            return null;
+        }
         final A2dpProfile a2dpProfile = mProfileManager.getA2dpProfile();
 
         if (haActiveDevice != null) {
@@ -257,6 +274,10 @@ public class MediaOutputPreferenceController extends AudioSwitchPreferenceContro
      */
     @Override
     protected BluetoothDevice findActiveHearingAidDevice() {
+        // T-SETTINGS-REDUCE2: guard null mProfileManager (BT excised).
+        if (mProfileManager == null) {
+            return null;
+        }
         final HearingAidProfile hearingAidProfile = mProfileManager.getHearingAidProfile();
 
         if (hearingAidProfile != null) {

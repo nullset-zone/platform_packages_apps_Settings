@@ -110,10 +110,15 @@ open class WifiHotspotScreen(context: Context) :
 
     override fun tags(context: Context) = arrayOf(KEY_WIFI_HOTSPOT)
 
-    override fun isAvailable(context: Context) =
-        canShowWifiHotspot(context) &&
+    override fun isAvailable(context: Context): Boolean {
+        // T-HOTSPOT-CATALYST: gate on config_show_sim_info (radio excised).
+        if (!context.resources.getBoolean(R.bool.config_show_sim_info)) {
+            return false
+        }
+        return canShowWifiHotspot(context) &&
                 TetherUtil.isTetherAvailable(context) &&
                 !Utils.isMonkeyRunning()
+    }
 
     override fun getSummary(context: Context): CharSequence? =
         when (context.wifiApState) {

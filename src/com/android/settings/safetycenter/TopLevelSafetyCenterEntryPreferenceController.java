@@ -43,6 +43,17 @@ public class TopLevelSafetyCenterEntryPreferenceController extends BasePreferenc
 
     @Override
     public int getAvailabilityStatus() {
+        // T-SETTINGS-REDUCE2 (GuardTalkOS): Safety Center aggregates telephony/
+        // security sources (biometrics, emergency, cellular security) that are
+        // either excised or dormant on this minimal image, and the entry has no
+        // AOSP config_* visibility bool to override. GuardTalkSettingsOverlay
+        // sets config_show_sim_info=false (radio excised), so gate on that to
+        // force-hide the row. Reversible: set config_show_sim_info=true to
+        // restore.
+        if (!mContext.getResources().getBoolean(
+                com.android.settings.R.bool.config_show_sim_info)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         if (SafetyCenterManagerWrapper.get().isEnabled(mContext)) {
             return AVAILABLE;
         }

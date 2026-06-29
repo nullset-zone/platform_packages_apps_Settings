@@ -21,6 +21,7 @@ import android.app.settings.SettingsEnums;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.FeatureFlagUtils;
 import android.util.Log;
 
@@ -98,6 +99,20 @@ public class ActivityEmbeddingRulesController {
             SplitRule.FinishBehavior finishSecondaryWithPrimary,
             boolean clearTop) {
         if (!ActivityEmbeddingUtils.isEmbeddingActivityEnabled(context)) {
+            return;
+        }
+        // Defence in depth: androidx.window.embedding.MatcherUtils rejects empty
+        // component package/class names with IllegalArgumentException. Bail out
+        // early if either the primary or secondary component is missing its
+        // package — callers may legitimately pass an empty-string component to
+        // signal "no split rule" (e.g. an absent wallpaper picker). This keeps
+        // other split rules registered elsewhere intact; it only skips this
+        // particular (primary, secondary) pair.
+        if (primaryComponent == null || secondaryComponent == null
+                || TextUtils.isEmpty(primaryComponent.getPackageName())
+                || TextUtils.isEmpty(secondaryComponent.getPackageName())) {
+            Log.w(TAG, "Skip registerTwoPanePairRule: empty component "
+                    + primaryComponent + " / " + secondaryComponent);
             return;
         }
         final Set<SplitPairFilter> filters = new HashSet<>();
