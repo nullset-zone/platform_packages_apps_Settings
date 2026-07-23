@@ -150,6 +150,7 @@ import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.dashboard.profileselector.ProfileSelectFragment;
 import com.android.settings.fuelgauge.AdvancedPowerUsageDetail;
 import com.android.settings.fuelgauge.HighPowerDetail;
+import com.android.settings.guardtalk.GuardTalkContactsVisibility;
 import com.android.settings.localepicker.AppLocalePickerActivity;
 import com.android.settings.nfc.AppStateNfcTagAppsBridge;
 import com.android.settings.nfc.ChangeNfcTagAppsStateDetails;
@@ -1523,8 +1524,25 @@ public class ManageApplications extends InstrumentedFragment
                 comparatorObj = ApplicationsState.ALPHA_COMPARATOR;
             }
 
-            final AppFilter finalFilterObj = new CompoundFilter(filterObj,
+            AppFilter notHideFilter = new CompoundFilter(filterObj,
                     ApplicationsState.FILTER_NOT_HIDE);
+            // T-SEC-P1-CONTACTS: omit Contacts / Contacts Storage from Manage apps /
+            // Show system lists (UI hide only; packages remain installed).
+            final Context filterContext = mManageApplications.getContext();
+            final AppFilter finalFilterObj = new CompoundFilter(notHideFilter, new AppFilter() {
+                @Override
+                public void init() {
+                }
+
+                @Override
+                public boolean filterApp(AppEntry entry) {
+                    if (entry == null || entry.info == null) {
+                        return true;
+                    }
+                    return !GuardTalkContactsVisibility.shouldHidePackage(
+                            filterContext, entry.info.packageName);
+                }
+            });
             ThreadUtils.postOnBackgroundThread(() -> {
                 mSession.rebuild(finalFilterObj, comparatorObj, false);
             });

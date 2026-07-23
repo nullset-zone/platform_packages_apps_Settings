@@ -32,6 +32,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.android.internal.widget.LockPatternUtils;
 import com.android.settings.R;
+import com.android.settings.guardtalk.GuardTalkLockPolicyHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,20 +165,33 @@ public class ChooseLockGenericController {
     public boolean isScreenLockVisible(ScreenLockType type) {
         final boolean managedProfile = mContext.getSystemService(UserManager.class)
                 .isManagedProfile(mUserId);
+        // GuardTalkOS T-SEC-P2-LOCK: password-only — hide PIN/pattern/insecure options.
+        final boolean passwordOnly =
+                GuardTalkLockPolicyHelper.isPasswordOnlyLockEnabled(mContext);
         switch (type) {
             case NONE:
+                if (passwordOnly) {
+                    return false;
+                }
                 return !mHideInsecureScreenLockTypes
                     && !mContext.getResources().getBoolean(R.bool.config_hide_none_security_option)
                     && !managedProfile; // Profiles should use unified challenge instead.
             case SWIPE:
+                if (passwordOnly) {
+                    return false;
+                }
                 return !mHideInsecureScreenLockTypes
                     && !mContext.getResources().getBoolean(R.bool.config_hide_swipe_security_option)
                     && !managedProfile; // Swipe doesn't make sense for profiles.
             case MANAGED:
-                return mManagedPasswordProvider.isManagedPasswordChoosable();
+                return !passwordOnly && mManagedPasswordProvider.isManagedPasswordChoosable();
             case PATTERN:
                 return false;
             case PIN:
+                if (passwordOnly) {
+                    return false;
+                }
+                return mLockPatternUtils.hasSecureLockScreen();
             case PASSWORD:
                 // Hide the secure lock screen options if the device doesn't support the secure lock
                 // screen feature.

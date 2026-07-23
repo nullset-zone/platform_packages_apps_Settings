@@ -91,6 +91,10 @@ public class VpnPreferenceController extends AbstractPreferenceController
 
     @Override
     public boolean isAvailable() {
+        // F-SEC-P1-ABOUT-APPS: Network keep/hide — VPN stays under Network & internet.
+        if (!mContext.getResources().getBoolean(R.bool.config_show_vpn_options)) {
+            return false;
+        }
         return !RestrictedLockUtilsInternal.hasBaseUserRestriction(mContext,
                 UserManager.DISALLOW_CONFIG_VPN, UserHandle.myUserId());
     }

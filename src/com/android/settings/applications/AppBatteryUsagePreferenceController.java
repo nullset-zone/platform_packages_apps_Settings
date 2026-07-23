@@ -29,6 +29,7 @@ import androidx.preference.PreferenceScreen;
 
 import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
+import com.android.settings.guardtalk.GuardTalkAppsVisibility;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -50,6 +51,10 @@ public final class AppBatteryUsagePreferenceController extends BasePreferenceCon
 
     @Override
     public int getAvailabilityStatus() {
+        if (!GuardTalkAppsVisibility.isShown(
+                mContext, GuardTalkAppsVisibility.KEY_APP_BATTERY_USAGE)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return mEnableAppBatteryUsagePage ? AVAILABLE : CONDITIONALLY_UNAVAILABLE;
     }
 }

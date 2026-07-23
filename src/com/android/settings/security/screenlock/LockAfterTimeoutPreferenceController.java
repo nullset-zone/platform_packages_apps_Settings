@@ -32,6 +32,7 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.settings.R;
 import com.android.settings.core.PreferenceControllerMixin;
 import com.android.settings.display.TimeoutListPreference;
+import com.android.settings.guardtalk.GuardTalkLockPolicyHelper;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.security.trustagent.TrustAgentManager;
 import com.android.settingslib.RestrictedLockUtils;
@@ -91,9 +92,12 @@ public class LockAfterTimeoutPreferenceController extends AbstractPreferenceCont
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         try {
-            final int timeout = Integer.parseInt((String) newValue);
+            long timeout = Integer.parseInt((String) newValue);
+            // GuardTalkOS T-SEC-P2-LOCK: clamp inactivity / lock-after-timeout.
+            timeout = Math.min(timeout,
+                    GuardTalkLockPolicyHelper.getMaxLockAfterTimeoutMs(mContext));
             Settings.Secure.putInt(mContext.getContentResolver(),
-                    Settings.Secure.LOCK_SCREEN_LOCK_AFTER_TIMEOUT, timeout);
+                    Settings.Secure.LOCK_SCREEN_LOCK_AFTER_TIMEOUT, (int) timeout);
             updateState(preference);
         } catch (NumberFormatException e) {
             Log.e(TAG, "could not persist lockAfter timeout setting", e);
@@ -105,10 +109,18 @@ public class LockAfterTimeoutPreferenceController extends AbstractPreferenceCont
         // Compatible with pre-Froyo
         long currentTimeout = Settings.Secure.getLong(mContext.getContentResolver(),
                 Settings.Secure.LOCK_SCREEN_LOCK_AFTER_TIMEOUT, 5000);
+        // GuardTalkOS T-SEC-P2-LOCK: clamp displayed/current value to policy max.
+        final long gtMax = GuardTalkLockPolicyHelper.getMaxLockAfterTimeoutMs(mContext);
+        if (currentTimeout > gtMax) {
+            currentTimeout = gtMax;
+            Settings.Secure.putLong(mContext.getContentResolver(),
+                    Settings.Secure.LOCK_SCREEN_LOCK_AFTER_TIMEOUT, currentTimeout);
+        }
         preference.setValue(String.valueOf(currentTimeout));
+        RestrictedLockUtils.EnforcedAdmin admin = null;
+        long maxTimeout = Long.MAX_VALUE;
         if (mDPM != null) {
-            final RestrictedLockUtils.EnforcedAdmin admin =
-                    RestrictedLockUtilsInternal.checkIfMaximumTimeToLockIsSet(mContext);
+            admin = RestrictedLockUtilsInternal.checkIfMaximumTimeToLockIsSet(mContext);
             final long adminTimeout =
                     mDPM.getMaximumTimeToLock(null /* admin */, UserHandle.myUserId());
             final long displayTimeout = Math.max(0,
@@ -116,7 +128,14 @@ public class LockAfterTimeoutPreferenceController extends AbstractPreferenceCont
             // This setting is a secondary to display timeout when a device policy is enforced.
             // As such, maxLockTimeout = adminTimeout - displayTimeout.
             // If there isn't enough time, shows "immediately" setting.
-            final long maxTimeout = Math.max(0, adminTimeout - displayTimeout);
+            maxTimeout = Math.max(0, adminTimeout - displayTimeout);
+        }
+        // GuardTalkOS T-SEC-P2-LOCK: also apply policy max when no DPM cap (or tighten it).
+        if (gtMax < Long.MAX_VALUE) {
+            maxTimeout = (maxTimeout > 0 && maxTimeout < Long.MAX_VALUE)
+                    ? Math.min(maxTimeout, gtMax) : gtMax;
+            preference.removeUnusableTimeouts(maxTimeout, admin);
+        } else if (mDPM != null) {
             preference.removeUnusableTimeouts(maxTimeout, admin);
         }
     }

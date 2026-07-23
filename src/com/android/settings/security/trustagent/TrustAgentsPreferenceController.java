@@ -84,6 +84,11 @@ public class TrustAgentsPreferenceController extends BasePreferenceController
 
     @Override
     public int getAvailabilityStatus() {
+        // GuardTalkOS T-SEC-P2-LOCK: Smart Lock / trust agents blocked.
+        if (com.android.settings.guardtalk.GuardTalkLockPolicyHelper
+                .isSmartLockBlocked(mContext)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return AVAILABLE;
     }
 

@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.provider.Settings;
 
 import com.android.settings.core.PreferenceControllerMixin;
+import com.android.settings.guardtalk.GuardTalkAboutPhoneVisibility;
 import com.android.settingslib.core.AbstractPreferenceController;
 
 public class RegulatoryInfoPreferenceController extends AbstractPreferenceController implements
@@ -34,6 +35,10 @@ public class RegulatoryInfoPreferenceController extends AbstractPreferenceContro
 
     @Override
     public boolean isAvailable() {
+        if (!GuardTalkAboutPhoneVisibility.isShown(
+                mContext, GuardTalkAboutPhoneVisibility.KEY_REGULATORY_INFO)) {
+            return false;
+        }
         return !mContext.getPackageManager().queryIntentActivities(INTENT_PROBE, 0).isEmpty();
     }
 

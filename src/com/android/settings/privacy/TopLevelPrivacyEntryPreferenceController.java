@@ -32,6 +32,11 @@ public class TopLevelPrivacyEntryPreferenceController  extends BasePreferenceCon
 
     @Override
     public int getAvailabilityStatus() {
+        // T-SEC-P1-SETTINGS: dedicated keep/hide hook for Main Settings Privacy.
+        if (!mContext.getResources().getBoolean(
+                com.android.settings.R.bool.config_show_top_level_privacy)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         if (!SafetyCenterManagerWrapper.get().isEnabled(mContext)) {
             return AVAILABLE;
         }

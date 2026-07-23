@@ -16,21 +16,56 @@
 
 package com.android.settings.security;
 
+import android.content.Context;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
+import com.android.settings.R;
+import com.android.settings.security.guardtalk.GuardTalkSecurityDashboardFragment;
+import com.android.settingslib.guardtalk.GuardTalkSettingsVisibilityKeys;
+
 /** Implementation for {@code SecuritySettingsFeatureProvider}. */
 public class SecuritySettingsFeatureProviderImpl implements SecuritySettingsFeatureProvider {
 
+    private final boolean mUseGuardTalkSecurityDashboard;
+
+    public SecuritySettingsFeatureProviderImpl() {
+        this(false);
+    }
+
+    public SecuritySettingsFeatureProviderImpl(Context context) {
+        this(context.getResources().getBoolean(R.bool.config_use_guardtalk_security_dashboard));
+    }
+
+    @VisibleForTesting
+    SecuritySettingsFeatureProviderImpl(boolean useGuardTalkSecurityDashboard) {
+        mUseGuardTalkSecurityDashboard = useGuardTalkSecurityDashboard;
+    }
+
     @Override
     public boolean hasAlternativeSecuritySettingsFragment() {
-        return false;
+        return mUseGuardTalkSecurityDashboard;
     }
 
     @Override
+    @Nullable
     public String getAlternativeSecuritySettingsFragmentClassname() {
-        return null;
+        if (!mUseGuardTalkSecurityDashboard) {
+            return null;
+        }
+        return GuardTalkSettingsVisibilityKeys.GUARDTALK_SECURITY_DASHBOARD_FRAGMENT;
     }
 
     @Override
+    @Nullable
     public String getAlternativeAdvancedSettingsCategoryKey() {
         return null;
+    }
+
+    /** Package-visible for tests that assert the fragment class name. */
+    @VisibleForTesting
+    static String guardTalkFragmentClassName() {
+        return GuardTalkSecurityDashboardFragment.class.getName();
     }
 }

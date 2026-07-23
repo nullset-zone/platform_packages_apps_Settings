@@ -36,6 +36,10 @@ public class BundlePreferenceController extends BasePreferenceController {
 
     @Override
     public int getAvailabilityStatus() {
+        // F-SEC-P4-SYSTEM-UI: Notifications keep/hide — bundling.
+        if (!mContext.getResources().getBoolean(R.bool.config_show_notification_bundling)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return Flags.notificationClassificationUi() && mBackend.isNotificationBundlingSupported()
                 ? AVAILABLE : CONDITIONALLY_UNAVAILABLE;
     }

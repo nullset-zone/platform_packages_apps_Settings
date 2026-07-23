@@ -29,7 +29,10 @@ public class TopLevelAboutDevicePreferenceController extends BasePreferenceContr
 
     @Override
     public int getAvailabilityStatus() {
-        return AVAILABLE;
+        // T-SEC-P1-SETTINGS: dedicated keep/hide hook for About phone.
+        return mContext.getResources().getBoolean(
+                com.android.settings.R.bool.config_show_top_level_about_device)
+                ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
     }
 
     @Override

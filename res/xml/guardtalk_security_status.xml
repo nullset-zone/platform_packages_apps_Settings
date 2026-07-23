@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  GuardTalkOS Security status (F-SEC-P5-STATUS-UI).
+  Post-unlock only. NEVER include Duress status here (lock-screen leakage).
+  Network / VPN / Wi-Fi / Hotspot / Airplane MUST NOT appear here.
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="guardtalk_security_status_screen"
+    android:title="@string/guardtalk_security_status_title">
+
+    <Preference
+        android:key="guardtalk_status_device_lock"
+        android:title="@string/guardtalk_security_device_lock_title"
+        android:summary="@string/guardtalk_security_device_lock_summary_password_only"
+        android:selectable="false"
+        android:order="10" />
+
+    <Preference
+        android:key="guardtalk_status_sensor_privacy"
+        android:title="@string/guardtalk_security_sensor_privacy_title"
+        android:summary="@string/guardtalk_security_sensor_privacy_summary_policy"
+        android:selectable="false"
+        android:order="20" />
+
+    <Preference
+        android:key="guardtalk_status_usb_protection"
+        android:title="@string/guardtalk_security_usb_protection_title"
+        android:summary="@string/guardtalk_security_usb_protection_summary_policy"
+        android:selectable="false"
+        android:order="30" />
+
+    <Preference
+        android:key="guardtalk_status_lockdown"
+        android:title="@string/guardtalk_security_lockdown_title"
+        android:summary="@string/guardtalk_security_lockdown_summary_ready"
+        android:selectable="false"
+        android:order="40" />
+
+    <Preference
+        android:key="guardtalk_status_auto_reboot"
+        android:title="@string/guardtalk_security_auto_reboot_title"
+        android:summary="@string/guardtalk_security_auto_reboot_summary_off"
+        android:selectable="false"
+        android:order="50" />
+
+    <Preference
+        android:key="guardtalk_status_anti_bruteforce"
+        android:title="@string/guardtalk_security_anti_bruteforce_title"
+        android:summary="@string/guardtalk_security_anti_bruteforce_summary_fallback"
+        android:selectable="false"
+        android:order="60" />
+
+    <Preference
+        android:key="guardtalk_status_secure_wipe"
+        android:title="@string/guardtalk_security_secure_wipe_title"
+        android:summary="@string/guardtalk_security_status_secure_wipe_available"
+        android:selectable="false"
+        android:order="65" />
+
+    <Preference
+        android:key="guardtalk_status_clipboard"
+        android:title="@string/guardtalk_security_clipboard_title"
+        android:summary="@string/guardtalk_security_clipboard_summary"
+        android:selectable="false"
+        android:order="70" />
+
+    <Preference
+        android:key="guardtalk_status_privacy_tmpfs"
+        android:title="@string/guardtalk_security_privacy_tmpfs_title"
+        android:summary="@string/guardtalk_security_privacy_tmpfs_summary"
+        android:selectable="false"
+        android:order="80" />
+
+    <Preference
+        android:key="guardtalk_status_files"
+        android:title="@string/guardtalk_security_files_title"
+        android:summary="@string/guardtalk_security_files_summary"
+        android:selectable="false"
+        android:order="90" />
+
+    <Preference
+        android:key="guardtalk_status_hardening"
+        android:title="@string/guardtalk_security_status_hardening_title"
+        android:summary="@string/guardtalk_security_status_hardening_enabled"
+        android:selectable="false"
+        android:order="95" />
+
+    <com.android.settingslib.widget.FooterPreference
+        android:key="guardtalk_status_footer"
+        android:title="@string/guardtalk_security_status_footer"
+        android:selectable="false"
+        android:order="100" />
+
+</PreferenceScreen>

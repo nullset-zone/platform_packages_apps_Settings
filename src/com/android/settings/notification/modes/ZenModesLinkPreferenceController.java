@@ -22,6 +22,7 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
+import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settingslib.core.lifecycle.LifecycleObserver;
 import com.android.settingslib.core.lifecycle.events.OnStart;
@@ -48,7 +49,9 @@ public class ZenModesLinkPreferenceController extends BasePreferenceController
     @Override
     @AvailabilityStatus
     public int getAvailabilityStatus() {
-        return AVAILABLE;
+        // T-SEC-P1-SETTINGS: dedicated keep/hide hook for Priority modes.
+        return mContext.getResources().getBoolean(R.bool.config_show_top_level_priority_modes)
+                ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
     }
 
     @Override

@@ -20,6 +20,7 @@ import android.content.Context;
 
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.fuelgauge.BatterySettingsFeatureProvider;
+import com.android.settings.guardtalk.GuardTalkAboutPhoneVisibility;
 import com.android.settings.overlay.FeatureFactory;
 
 /** Controller to enter battery information page. */
@@ -35,6 +36,10 @@ public class BatteryInfoPreferenceController extends BasePreferenceController {
 
     @Override
     public int getAvailabilityStatus() {
+        if (!GuardTalkAboutPhoneVisibility.isShown(
+                mContext, GuardTalkAboutPhoneVisibility.KEY_BATTERY_INFO)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return mBatterySettingsFeatureProvider.isBatteryInfoEnabled(mContext) ? AVAILABLE
                 : UNSUPPORTED_ON_DEVICE;
     }

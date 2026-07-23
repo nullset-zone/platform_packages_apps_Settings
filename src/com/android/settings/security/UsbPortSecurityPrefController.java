@@ -3,10 +3,12 @@ package com.android.settings.security;
 import android.content.Context;
 import android.content.res.Resources;
 import android.ext.settings.UsbPortSecurity;
+import android.guardtalk.GuardTalkUsbProtectionPolicy;
 import android.hardware.usb.UsbManager;
 
 import com.android.settings.R;
 import com.android.settings.ext.IntSettingPrefController;
+import com.android.settings.guardtalk.GuardTalkUsbProtectionHelper;
 
 import static java.util.Objects.requireNonNull;
 
@@ -62,17 +64,25 @@ public class UsbPortSecurityPrefController extends IntSettingPrefController {
         entries.add(title, summary,
                 UsbPortSecurity.MODE_CHARGING_ONLY_WHEN_LOCKED);
 
-        CharSequence titleAfu = res.getText(R.string.usbc_port_charging_only_when_locked_afu_title);
-        String summaryAfu = res.getString(R.string.usbc_port_charging_only_when_locked_afu_summary, title);
-        entries.add(titleAfu, summaryAfu,
-                UsbPortSecurity.MODE_CHARGING_ONLY_WHEN_LOCKED_AFU);
+        // GuardTalk fail-closed: hide AFU (data before first unlock) and unrestricted On.
+        final boolean guardTalkFailClosed =
+                GuardTalkUsbProtectionHelper.isFailClosedEnabled(mContext)
+                        || GuardTalkUsbProtectionPolicy.isFailClosedEnabled();
+        if (!guardTalkFailClosed) {
+            CharSequence titleAfu = res.getText(R.string.usbc_port_charging_only_when_locked_afu_title);
+            String summaryAfu = res.getString(R.string.usbc_port_charging_only_when_locked_afu_summary, title);
+            entries.add(titleAfu, summaryAfu,
+                    UsbPortSecurity.MODE_CHARGING_ONLY_WHEN_LOCKED_AFU);
 
-        entries.add(R.string.usbc_port_on_title, R.string.usbc_port_on_summary,
-                UsbPortSecurity.MODE_ALL_PORTS_ENABLED);
+            entries.add(R.string.usbc_port_on_title, R.string.usbc_port_on_summary,
+                    UsbPortSecurity.MODE_ALL_PORTS_ENABLED);
+        }
     }
 
     @Override
     protected boolean setValue(int val) {
+        // Server clamps AFU/On under GuardTalk; keep UI aligned.
+        val = GuardTalkUsbProtectionPolicy.clampPortSecurityMode(val);
         var usbManager = requireNonNull(mContext.getSystemService(UsbManager.class));
         usbManager.updatePortSecuritySetting(val);
         return true;

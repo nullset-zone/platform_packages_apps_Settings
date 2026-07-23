@@ -24,6 +24,7 @@ import androidx.preference.PreferenceScreen;
 
 import com.android.settings.R;
 import com.android.settings.core.PreferenceControllerMixin;
+import com.android.settings.guardtalk.GuardTalkAboutPhoneVisibility;
 import com.android.settingslib.core.AbstractPreferenceController;
 
 public class FccEquipmentIdPreferenceController extends AbstractPreferenceController implements
@@ -39,6 +40,10 @@ public class FccEquipmentIdPreferenceController extends AbstractPreferenceContro
 
     @Override
     public boolean isAvailable() {
+        if (!GuardTalkAboutPhoneVisibility.isShown(
+                mContext, GuardTalkAboutPhoneVisibility.KEY_FCC_EQUIPMENT_ID)) {
+            return false;
+        }
         return !TextUtils.isEmpty(SystemProperties.get(PROPERTY_EQUIPMENT_ID));
     }
 

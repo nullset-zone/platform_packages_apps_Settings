@@ -29,6 +29,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.android.settings.R
 import com.android.settings.core.SubSettingLauncher
 import com.android.settings.development.DevelopmentSettingsDashboardFragment
+import com.android.settings.guardtalk.GuardTalkDeveloperOptionsPolicy
 import com.android.settings.spa.preference.ComposePreferenceController
 import com.android.settingslib.spa.framework.util.collectLatestWithLifecycle
 import com.android.settingslib.spa.widget.preference.PreferenceModel
@@ -63,6 +64,9 @@ constructor(
             isDevelopmentSettingsEnabled ->
             availabilityStatus =
                 when {
+                    // GuardTalk: hide Developer Options entry when unlock is blocked.
+                    GuardTalkDeveloperOptionsPolicy.isUnlockBlocked(mContext) ->
+                        CONDITIONALLY_UNAVAILABLE
                     !isDevelopmentSettingsEnabled -> CONDITIONALLY_UNAVAILABLE
                     !isAdminUser() -> DISABLED_FOR_USER
                     else -> AVAILABLE

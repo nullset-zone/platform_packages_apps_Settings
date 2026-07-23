@@ -40,6 +40,7 @@ import com.android.settings.deviceinfo.BuildNumberPreferenceController;
 import com.android.settings.deviceinfo.DeviceNamePreferenceController;
 import com.android.settings.deviceinfo.FccEquipmentIdPreferenceController;
 import com.android.settings.deviceinfo.FeedbackPreferenceController;
+import com.android.settings.deviceinfo.GuardTalkLegalInfoPreferenceController;
 import com.android.settings.deviceinfo.IpAddressPreferenceController;
 import com.android.settings.deviceinfo.ManualPreferenceController;
 import com.android.settings.deviceinfo.RegulatoryInfoPreferenceController;
@@ -162,6 +163,8 @@ public class MyDeviceInfoFragment extends DashboardFragment
         controllers.add(new FeedbackPreferenceController(fragment, context));
         controllers.add(new FccEquipmentIdPreferenceController(context));
         controllers.add(new UptimePreferenceController(context, lifecycle));
+        // F-SEC-P1-ABOUT-APPS: Legal info keep/hide (no AOSP controller previously).
+        controllers.add(new GuardTalkLegalInfoPreferenceController(context, "legal_container"));
 
         Consumer<String> imeiInfoList = imeiKey -> {
             if (Flags.catalystMyDeviceInfoPrefScreen()) {

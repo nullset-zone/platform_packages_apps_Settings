@@ -48,6 +48,7 @@ import com.android.settings.safetycenter.ui.PrivacyControlsFragment;
 import com.android.settings.security.LockscreenDashboardFragment;
 import com.android.settings.security.SecurityAdvancedSettings;
 import com.android.settings.security.SecuritySettings;
+import com.android.settings.security.guardtalk.GuardTalkSecurityDashboardFragment;
 import com.android.settings.sound.MediaControlsSettings;
 import com.android.settings.supervision.SupervisionDashboardFragment;
 import com.android.settings.system.SystemDashboardFragment;
@@ -97,6 +98,9 @@ public class DashboardFragmentRegistry {
         PARENT_TO_CATEGORY_KEY_MAP.put(StorageDashboardFragment.class.getName(),
                 CategoryKey.CATEGORY_STORAGE);
         PARENT_TO_CATEGORY_KEY_MAP.put(SecuritySettings.class.getName(),
+                CategoryKey.CATEGORY_SECURITY);
+        // T-SEC-P1-SETTINGS: GuardTalk Security skeleton hosts CATEGORY_SECURITY tiles.
+        PARENT_TO_CATEGORY_KEY_MAP.put(GuardTalkSecurityDashboardFragment.class.getName(),
                 CategoryKey.CATEGORY_SECURITY);
         PARENT_TO_CATEGORY_KEY_MAP.put(SecurityAdvancedSettings.class.getName(),
                 CategoryKey.CATEGORY_SECURITY_ADVANCED_SETTINGS);

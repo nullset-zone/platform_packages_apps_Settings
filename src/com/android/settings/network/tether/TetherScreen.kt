@@ -62,12 +62,9 @@ open class TetherScreen :
         }
 
     override fun isAvailable(context: Context): Boolean {
-        // T-HOTSPOT-CATALYST: mirror the legacy TetherPreferenceController guard.
-        // The Catalyst path (TetherScreen) does NOT consult config_show_sim_info,
-        // so on a radio-excised GuardTalkOS image (config_show_sim_info=false)
-        // the entry renders via this ungated screen despite the legacy fix.
-        // Gate it here to hide the entry from both nav + search.
-        if (!context.resources.getBoolean(R.bool.config_show_sim_info)) {
+        // F-SEC-P1-ABOUT-APPS: Network keep/hide matrix — Hotspot under Network
+        // only when config_show_wifi_hotspot_settings is true (never under Security).
+        if (!context.resources.getBoolean(R.bool.config_show_wifi_hotspot_settings)) {
             return false
         }
         return TetherUtil.isTetherAvailable(context)

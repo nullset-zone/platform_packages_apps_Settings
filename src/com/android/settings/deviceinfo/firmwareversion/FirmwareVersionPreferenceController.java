@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.android.settings.core.BasePreferenceController;
+import com.android.settings.guardtalk.GuardTalkAboutPhoneVisibility;
 
 public class FirmwareVersionPreferenceController extends BasePreferenceController {
 
@@ -29,7 +30,10 @@ public class FirmwareVersionPreferenceController extends BasePreferenceControlle
 
     @Override
     public int getAvailabilityStatus() {
-        return AVAILABLE;
+        return GuardTalkAboutPhoneVisibility.isShown(
+                mContext, GuardTalkAboutPhoneVisibility.KEY_FIRMWARE_VERSION)
+                ? AVAILABLE
+                : UNSUPPORTED_ON_DEVICE;
     }
 
     @Override

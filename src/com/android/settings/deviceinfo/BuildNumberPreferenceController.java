@@ -39,6 +39,8 @@ import com.android.settings.Utils;
 import com.android.settings.biometrics.IdentityCheckBiometricErrorDialog;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.core.InstrumentedPreferenceFragment;
+import com.android.settings.guardtalk.GuardTalkAboutPhoneVisibility;
+import com.android.settings.guardtalk.GuardTalkDeveloperOptionsPolicy;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.password.ChooseLockSettingsHelper;
 import com.android.settings.password.ConfirmDeviceCredentialActivity;
@@ -99,7 +101,10 @@ public class BuildNumberPreferenceController extends BasePreferenceController im
 
     @Override
     public int getAvailabilityStatus() {
-        return AVAILABLE;
+        // GuardTalk About keep/hide: Build number stays visible when policy allows.
+        return GuardTalkAboutPhoneVisibility.isBuildNumberShown(mContext)
+                ? AVAILABLE
+                : UNSUPPORTED_ON_DEVICE;
     }
 
     @Override
@@ -114,6 +119,13 @@ public class BuildNumberPreferenceController extends BasePreferenceController im
         }
         if (isUserAMonkey()) {
             return false;
+        }
+        // GuardTalk: Build number remains visible, but seven taps must not unlock
+        // Developer Options (T-SEC-P1-DEVOPTS).
+        if (GuardTalkDeveloperOptionsPolicy.isUnlockBlocked(mContext)) {
+            mMetricsFeatureProvider.action(
+                    mContext, SettingsEnums.ACTION_SETTINGS_BUILD_NUMBER_PREF);
+            return true;
         }
         // Don't enable developer options for secondary non-demo users.
         if (!(mUm.isAdminUser() || mUm.isDemoUser())) {
@@ -264,6 +276,11 @@ public class BuildNumberPreferenceController extends BasePreferenceController im
      * Enables development settings. Only call this after confirming password.
      */
     private void enableDevelopmentSettings() {
+        if (GuardTalkDeveloperOptionsPolicy.isUnlockBlocked(mContext)) {
+            mDevHitCountdown = TAPS_TO_BE_A_DEVELOPER;
+            mProcessingLastDevHit = false;
+            return;
+        }
         mDevHitCountdown = 0;
         mProcessingLastDevHit = false;
         DevelopmentSettingsEnabler.setDevelopmentSettingsEnabled(mContext, true);

@@ -65,17 +65,13 @@ constructor(
      * - Actual UI visibility is handled in [onViewCreated].
      * - Search visibility is handled in [updateNonIndexableKeys].
      *
-     * T-SETTINGS-REDUCE2 (GuardTalkOS): Hotspot & Tethering is out of scope for
-     * this minimal image (radio excised; Wi-Fi hotspot is not a GuardTalk UX
-     * surface). The controller has no AOSP config_* visibility bool to override
-     * (verified), and it deliberately returns AVAILABLE to avoid ANR, so
-     * force-hide via the GuardTalkSettingsOverlay config_show_sim_info=false
-     * flag (radio excised). Reversible: set config_show_sim_info=true to
-     * restore the upstream AVAILABLE-then-onViewCreated flow.
+     * F-SEC-P1-ABOUT-APPS: Hotspot/tethering visibility is driven by
+     * config_show_wifi_hotspot_settings (Network keep/hide matrix). Must NOT
+     * live under Security. Reversible via GuardTalkSettingsOverlay.
      */
     override fun getAvailabilityStatus(): Int {
         if (!mContext.resources.getBoolean(
-                com.android.settings.R.bool.config_show_sim_info)) {
+                com.android.settings.R.bool.config_show_wifi_hotspot_settings)) {
             return UNSUPPORTED_ON_DEVICE
         }
         return AVAILABLE
@@ -88,15 +84,11 @@ constructor(
 
     override fun onViewCreated(viewLifecycleOwner: LifecycleOwner) {
         isTetherAvailableFlow.collectLatestWithLifecycle(viewLifecycleOwner) {
-            // T-HOTSPOT-LEGACY: getAvailabilityStatus() returns UNSUPPORTED_ON_DEVICE
-            // when config_show_sim_info=false (radio excised), but this controller
-            // deliberately returns AVAILABLE there to avoid ANR and defers real
-            // visibility to onViewCreated. isTetherAvailable() returns TRUE even
-            // without a SIM (Wi-Fi hotspot needs no radio), so without this guard
-            // the row reappears despite getAvailabilityStatus() saying hidden.
-            // Gate on config_show_sim_info to match the Catalyst path (TetherScreen).
+            // F-SEC-P1-ABOUT-APPS: mirror config_show_wifi_hotspot_settings so the
+            // row cannot reappear via isTetherAvailable() when the Network matrix
+            // hides Hotspot.
             if (!mContext.resources.getBoolean(
-                    com.android.settings.R.bool.config_show_sim_info)) {
+                    com.android.settings.R.bool.config_show_wifi_hotspot_settings)) {
                 preference?.isVisible = false
             } else {
                 preference?.isVisible = it
@@ -132,12 +124,9 @@ constructor(
     }
 
     override fun updateNonIndexableKeys(keys: MutableList<String>) {
-        // T-SETTINGS-REDUCE2: mirror the getAvailabilityStatus() guard so the
-        // entry is also de-indexed from Settings search when the radio-excised
-        // config_show_sim_info=false overlay is active. Without this, the row
-        // is hidden in the UI but still appears in search results.
+        // F-SEC-P1-ABOUT-APPS: de-index when Network matrix hides Hotspot.
         if (!mContext.resources.getBoolean(
-                com.android.settings.R.bool.config_show_sim_info) ||
+                com.android.settings.R.bool.config_show_wifi_hotspot_settings) ||
             !TetherUtil.isTetherAvailable(mContext)) {
             keys += preferenceKey
         }

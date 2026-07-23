@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
+import com.android.settings.guardtalk.GuardTalkContactsVisibility;
 import com.android.settingslib.accounts.AuthenticatorHelper;
 
 /**
@@ -54,6 +55,11 @@ public class ContactsStoragePreferenceController extends BasePreferenceControlle
 
     @Override
     public int getAvailabilityStatus() {
+        // T-SEC-P1-CONTACTS: hide Contacts storage from Apps / search when
+        // GuardTalk UI suppression is enabled (package remains installed).
+        if (GuardTalkContactsVisibility.isUiHidden(mContext)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return (Flags.newDefaultAccountApiEnabled()
                 && mCurrentDefaultAccountAndState != null) ? AVAILABLE : CONDITIONALLY_UNAVAILABLE;
     }

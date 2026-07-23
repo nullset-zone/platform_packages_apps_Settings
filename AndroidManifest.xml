@@ -3354,6 +3354,12 @@
             android:theme="@style/GlifTheme.Light"
             android:exported="false" />
 
+        <!-- F-SEC-P2-SECURITY-SCREENS: password → irreversible warning → erase confirm -->
+        <activity android:name=".security.GuardTalkSecureWipeActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:theme="@*android:style/Theme.DeviceDefault.Settings.Dialog.Alert" />
+
         <activity android:name=".biometrics.fingerprint.FingerprintEnrollSuggestionActivity"
             android:exported="true"
             android:icon="@drawable/ic_suggestion_fingerprint">

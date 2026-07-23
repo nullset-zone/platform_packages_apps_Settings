@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.res.stringResource
 import com.android.settings.R
+import com.android.settings.guardtalk.GuardTalkContactsVisibility
 import com.android.settings.spa.app.appinfo.AppInfoSettingsProvider
 import com.android.settingslib.spa.framework.common.SettingsEntryBuilder
 import com.android.settingslib.spa.framework.common.SettingsPageProvider
@@ -114,14 +115,23 @@ class AllAppListModel(
         userIdFlow: Flow<Int>,
         option: Int,
         recordListFlow: Flow<List<AppRecordWithSize>>,
-    ): Flow<List<AppRecordWithSize>> = recordListFlow.filterItem(
-        when (SpinnerItem.entries.getOrNull(option)) {
-            SpinnerItem.Enabled -> ({ it.app.enabled && !it.app.isInstantApp })
-            SpinnerItem.Disabled -> isDisabled
-            SpinnerItem.Instant -> isInstant
-            else -> ({ true })
+    ): Flow<List<AppRecordWithSize>> {
+        // T-SEC-P1-CONTACTS: omit Contacts / Contacts Storage from Show all apps.
+        val optionPredicate: (AppRecordWithSize) -> Boolean =
+            when (SpinnerItem.entries.getOrNull(option)) {
+                SpinnerItem.Enabled -> ({ it.app.enabled && !it.app.isInstantApp })
+                SpinnerItem.Disabled -> isDisabled
+                SpinnerItem.Instant -> isInstant
+                else -> ({ true })
+            }
+        return recordListFlow.filterItem { record ->
+            optionPredicate(record)
+                    && !GuardTalkContactsVisibility.shouldHidePackage(
+                context,
+                record.app.packageName,
+            )
         }
-    )
+    }
 
     private val isDisabled: (AppRecordWithSize) -> Boolean =
         { !it.app.enabled && !it.app.isInstantApp }

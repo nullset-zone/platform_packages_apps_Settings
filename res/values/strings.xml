@@ -854,6 +854,93 @@
     <string name="security_status_title">Security status</string>
     <!-- Summary for Security settings, explaining a few important settings under it [CHAR LIMIT=NONE] -->
     <string name="security_dashboard_summary">Screen lock, Find My Device, app security</string>
+
+    <!-- GuardTalkOS Security dashboard skeleton (T-SEC-P1-SETTINGS) -->
+    <string name="guardtalk_security_device_category_title">Device security</string>
+    <string name="guardtalk_security_status_category_title">Status</string>
+    <string name="guardtalk_security_config_category_title">GuardTalk</string>
+    <string name="guardtalk_security_stub_summary">Coming soon</string>
+    <string name="guardtalk_security_device_lock_title">Device lock</string>
+    <!-- GuardTalkOS T-SEC-P2-LOCK: password-only device lock summary -->
+    <string name="guardtalk_security_device_lock_summary_password_only">Password only. PIN, pattern, biometrics, and Smart Lock are disabled.</string>
+    <string name="guardtalk_security_sensor_privacy_title">Sensor privacy</string>
+    <!-- GuardTalkOS T-SEC-P2-SENSOR: mic/camera denied when locked / pre-first-unlock -->
+    <string name="guardtalk_security_sensor_privacy_summary_policy">Microphone and camera stay off while locked and before first unlock.</string>
+    <string name="guardtalk_security_sensor_privacy_summary_locked">Sensors off (device locked or awaiting first unlock).</string>
+    <string name="guardtalk_security_usb_protection_title">USB protection</string>
+    <!-- GuardTalkOS T-SEC-P2-USB: charging-only when locked / pre-first-unlock -->
+    <string name="guardtalk_security_usb_protection_summary_policy">USB data stays off while locked and before first unlock. Charging only.</string>
+    <string name="guardtalk_security_usb_protection_summary_locked">USB data off (device locked or awaiting first unlock). Charging only.</string>
+    <string name="guardtalk_security_lockdown_title">Lockdown</string>
+    <!-- GuardTalkOS T-SEC-P2-SENSOR: lockdown fail-closed (not a QS tile) -->
+    <string name="guardtalk_security_lockdown_summary_ready">Locks device; mic, camera, and network stay off until password unlock.</string>
+    <string name="guardtalk_security_lockdown_summary_active">Active — unlock with password to exit.</string>
+    <string name="guardtalk_security_auto_reboot_title">Auto-reboot</string>
+    <string name="guardtalk_security_auto_reboot_summary_off">Off — device will not auto-reboot while locked</string>
+    <string name="guardtalk_security_auto_reboot_summary_on">Reboots after inactivity while locked</string>
+    <plurals name="guardtalk_security_auto_reboot_summary_hours">
+        <item quantity="one">Reboots after %d hour of inactivity while locked</item>
+        <item quantity="other">Reboots after %d hours of inactivity while locked</item>
+    </plurals>
+    <string name="guardtalk_auto_reboot_footer">Automatically reboot if the device stays locked for the selected time. Timer pauses during calls, camera/video use, file copying, and system updates. Password is required after reboot. Profiles: Off, 1, 2, 4, or 8 hours.</string>
+    <string name="guardtalk_security_duress_title">Duress</string>
+    <string name="guardtalk_security_duress_summary">Set a duress password that crypto-erases the device. Status is never shown on the lock screen.</string>
+    <string name="guardtalk_security_duress_summary_armed">Duress password armed</string>
+    <string name="guardtalk_security_anti_bruteforce_title">Anti-bruteforce</string>
+    <string name="guardtalk_security_anti_bruteforce_summary_fallback">Hardware-backed wipe after repeated failed unlocks</string>
+    <plurals name="guardtalk_security_anti_bruteforce_summary">
+        <item quantity="one">Hardware-backed wipe after %d failed unlock</item>
+        <item quantity="other">Hardware-backed wipe after %d failed unlocks</item>
+    </plurals>
+    <string name="guardtalk_security_secure_wipe_title">Secure wipe</string>
+    <string name="guardtalk_security_secure_wipe_summary">Crypto-erase keys (recoverable by reflash). Requires password and confirmation.</string>
+    <string name="guardtalk_security_secure_wipe_warning_title">This cannot be undone</string>
+    <string name="guardtalk_security_secure_wipe_warning_message">Secure wipe permanently destroys encryption keys (FBE / KeyMint). All user data becomes inaccessible. The device will power off. GuardTalkOS remains installed and can be restored by reflash — this is not a hardware brick.\n\nThis action is irreversible without a prior backup.</string>
+    <string name="guardtalk_security_secure_wipe_continue">Continue</string>
+    <string name="guardtalk_security_secure_wipe_confirm_title">Erase encryption keys?</string>
+    <string name="guardtalk_security_secure_wipe_confirm_message">Confirm secure wipe. Encryption keys will be destroyed immediately and the device will shut down. You cannot cancel once erase starts.</string>
+    <string name="guardtalk_security_secure_wipe_erase">Erase</string>
+    <string name="guardtalk_security_secure_wipe_failed">Secure wipe failed. Device was not erased.</string>
+    <string name="guardtalk_security_status_title">Security status</string>
+    <string name="guardtalk_security_status_summary">Post-unlock overview of device security policies</string>
+    <string name="guardtalk_security_status_footer">Available only after unlock. Duress status is never shown here or on the lock screen.</string>
+    <!-- F-SEC-P5-STATUS-UI: aggregate inactive / unavailable / wipe / hardening (no Duress). -->
+    <string name="guardtalk_security_status_inactive">Not active on this build</string>
+    <string name="guardtalk_security_status_unavailable">Unavailable</string>
+    <string name="guardtalk_security_status_secure_wipe_available">Secure wipe available (crypto-erase; recoverable by reflash)</string>
+    <string name="guardtalk_security_status_hardening_title">Production hardening</string>
+    <string name="guardtalk_security_status_hardening_enabled">Hardening markers enabled (engineering build)</string>
+    <string name="guardtalk_security_status_hardening_enabled_block">Hardening markers enabled; unknown-source installs blocked (engineering build)</string>
+    <string name="guardtalk_security_status_hardening_production">Production profile active (debug off)</string>
+    <string name="guardtalk_security_status_hardening_production_block">Production profile active (debug off); unknown-source installs blocked</string>
+    <!-- F-SEC-P4 / F-SEC-P5: privacy / Files status (policy-backed copy). -->
+    <string name="guardtalk_security_clipboard_title">Clipboard</string>
+    <string name="guardtalk_security_clipboard_summary">Clipboard clears when the device locks and after a short timeout.</string>
+    <plurals name="guardtalk_security_clipboard_summary_timeout">
+        <item quantity="one">Clipboard clears when the device locks and after %d second.</item>
+        <item quantity="other">Clipboard clears when the device locks and after %d seconds.</item>
+    </plurals>
+    <string name="guardtalk_security_privacy_tmpfs_title">Private temporary storage</string>
+    <string name="guardtalk_security_privacy_tmpfs_summary">Sensitive temporary data is kept in RAM and discarded on reboot.</string>
+    <string name="guardtalk_security_files_title">Files</string>
+    <string name="guardtalk_security_files_summary">Deleted files go to Trash so you can restore them. System and firmware storage cannot be erased from Files.</string>
+    <string name="guardtalk_security_files_summary_policy">Files policy is active on this build.</string>
+    <string name="guardtalk_security_files_summary_trash">Deleted files go to Trash so you can restore them.</string>
+    <string name="guardtalk_security_files_summary_protect">System and firmware storage cannot be erased from Files.</string>
+    <string name="guardtalk_gt_info_summary">GuardTalkOS build and policy information</string>
+    <string name="guardtalk_gt_config_title">GT Config</string>
+    <string name="guardtalk_gt_info_title">GT Info</string>
+    <string name="guardtalk_gt_config_summary_locked">Requires device password</string>
+    <string name="guardtalk_gt_config_summary_authorized">Unlocked for %1$s</string>
+    <string name="guardtalk_gt_config_summary_no_password">Set a device password first</string>
+    <string name="guardtalk_gt_config_confirm_details">Enter your device password to access GT Config and Security settings</string>
+    <string name="guardtalk_gt_config_toast_unlocked">GT Config unlocked</string>
+    <string name="guardtalk_gt_config_toast_denied">Password required for GT Config</string>
+    <string name="guardtalk_gt_config_toast_launch_failed">GT Config is unavailable</string>
+    <string name="guardtalk_maintenance_summary_locked">Requires device password</string>
+    <string name="guardtalk_maintenance_summary_authorized">Maintenance unlocked</string>
+    <string name="guardtalk_maintenance_toast_denied">Password required for maintenance access</string>
+
     <!-- TODO(b/208624929): Update to an UX approved title and char limit. -->
     <!-- Main Settings screen setting title for the item that takes you to the safety center [CHAR LIMIT=60] -->
     <string name="safety_center_title">Security &amp; privacy</string>

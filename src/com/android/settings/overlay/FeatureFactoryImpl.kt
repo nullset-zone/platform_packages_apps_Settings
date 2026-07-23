@@ -168,7 +168,9 @@ open class FeatureFactoryImpl : FeatureFactory() {
     }
 
     override val securitySettingsFeatureProvider: SecuritySettingsFeatureProvider by lazy {
-        SecuritySettingsFeatureProviderImpl()
+        // T-SEC-P1-SETTINGS: gate GuardTalk Security dashboard via overlayable
+        // config_use_guardtalk_security_dashboard (GuardTalkSettingsOverlay).
+        SecuritySettingsFeatureProviderImpl(appContext)
     }
 
     override val accessibilityFeedbackFeatureProvider:

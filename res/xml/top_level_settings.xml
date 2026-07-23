@@ -63,7 +63,19 @@
             android:order="-60"
             android:title="@string/apps_dashboard_title"
             android:summary="@string/app_and_notification_dashboard_summary"
-            settings:highlightableMenuKey="@string/menu_key_apps"/>
+            settings:highlightableMenuKey="@string/menu_key_apps"
+            settings:controller="com.android.settings.applications.TopLevelAppsPreferenceController"/>
+
+        <!-- F-SEC-P1-SETTINGS-UI: Security immediately after Apps (order -55). -->
+        <com.android.settings.widget.HomepagePreference
+            android:fragment="com.android.settings.security.guardtalk.GuardTalkSecurityDashboardFragment"
+            android:icon="@drawable/ic_settings_security_filled"
+            android:key="top_level_security"
+            android:order="-55"
+            android:title="@string/security_settings_title"
+            android:summary="@string/security_dashboard_summary"
+            settings:highlightableMenuKey="@string/menu_key_security"
+            settings:controller="com.android.settings.security.TopLevelSecurityEntryPreferenceController"/>
 
         <com.android.settings.widget.HomepagePreference
             android:fragment="com.android.settings.notification.ConfigureNotificationSettings"
@@ -72,7 +84,8 @@
             android:order="-50"
             android:title="@string/configure_notification_settings"
             android:summary="@string/notification_dashboard_summary"
-            settings:highlightableMenuKey="@string/menu_key_notifications"/>
+            settings:highlightableMenuKey="@string/menu_key_notifications"
+            settings:controller="com.android.settings.notification.TopLevelNotificationsPreferenceController"/>
 
         <com.android.settings.widget.HomepagePreference
             android:fragment="com.android.settings.notification.SoundSettings"
@@ -81,7 +94,8 @@
             android:order="-40"
             android:title="@string/sound_settings"
             android:summary="@string/sound_dashboard_summary"
-            settings:highlightableMenuKey="@string/menu_key_sound"/>
+            settings:highlightableMenuKey="@string/menu_key_sound"
+            settings:controller="com.android.settings.notification.TopLevelSoundPreferenceController"/>
 
         <com.android.settings.widget.RestrictedHomepagePreference
             android:fragment="com.android.settings.notification.modes.ZenModesListFragment"
@@ -154,7 +168,8 @@
             android:order="-20"
             android:title="@string/header_category_system"
             android:summary="@string/system_dashboard_summary"
-            settings:highlightableMenuKey="@string/menu_key_system"/>
+            settings:highlightableMenuKey="@string/menu_key_system"
+            settings:controller="com.android.settings.system.TopLevelSystemPreferenceController"/>
 
         <com.android.settings.widget.HomepagePreference
             android:fragment="com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment"
@@ -180,15 +195,7 @@
             settings:highlightableMenuKey="@string/menu_key_safety_center"
             settings:controller="com.android.settings.safetycenter.TopLevelSafetyCenterEntryPreferenceController"/>
 
-        <com.android.settings.widget.HomepagePreference
-            android:fragment="com.android.settings.security.SecuritySettings"
-            android:icon="@drawable/ic_settings_security_filled"
-            android:key="top_level_security"
-            android:order="-40"
-            android:title="@string/security_settings_title"
-            android:summary="@string/security_dashboard_summary"
-            settings:highlightableMenuKey="@string/menu_key_security"
-            settings:controller="com.android.settings.security.TopLevelSecurityEntryPreferenceController"/>
+        <!-- top_level_security moved into personalize category (after Apps). -->
 
         <com.android.settings.widget.HomepagePreference
             android:fragment="com.android.settings.privacy.PrivacyDashboardFragment"

@@ -49,7 +49,9 @@ public class TopLevelStoragePreferenceController extends BasePreferenceControlle
 
     @Override
     public int getAvailabilityStatus() {
-        return AVAILABLE;
+        // T-SEC-P1-SETTINGS: dedicated keep/hide hook for Storage.
+        return mContext.getResources().getBoolean(R.bool.config_show_top_level_storage)
+                ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
     }
 
     @Override

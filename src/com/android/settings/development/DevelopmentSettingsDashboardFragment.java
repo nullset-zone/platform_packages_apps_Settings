@@ -61,6 +61,7 @@ import com.android.settings.Utils;
 import com.android.settings.biometrics.IdentityCheckBiometricErrorDialog;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.dashboard.RestrictedDashboardFragment;
+import com.android.settings.guardtalk.GuardTalkDeveloperOptionsPolicy;
 import com.android.settings.development.autofill.AutofillCategoryController;
 import com.android.settings.development.autofill.AutofillLoggingLevelPreferenceController;
 import com.android.settings.development.autofill.AutofillResetOptionsPreferenceController;
@@ -260,6 +261,14 @@ public class DevelopmentSettingsDashboardFragment extends RestrictedDashboardFra
         }
         Context context = requireContext();
         UserManager um = (UserManager) getSystemService(Context.USER_SERVICE);
+
+        // GuardTalk: block deep-link / intent entry when Dev Options unlock is policy-blocked.
+        if (GuardTalkDeveloperOptionsPolicy.isUnlockBlocked(context)) {
+            Toast.makeText(context, R.string.dev_settings_disabled_warning, Toast.LENGTH_SHORT)
+                    .show();
+            finish();
+            return;
+        }
 
         if (!um.isAdminUser()) {
             Toast.makeText(context, R.string.dev_settings_available_to_admin_only_warning,
@@ -651,6 +660,9 @@ public class DevelopmentSettingsDashboardFragment extends RestrictedDashboardFra
         if (Utils.isMonkeyRunning()) {
             return;
         }
+        if (GuardTalkDeveloperOptionsPolicy.isUnlockBlocked(getContext())) {
+            return;
+        }
         DevelopmentSettingsEnabler.setDevelopmentSettingsEnabled(getContext(), true);
         for (AbstractPreferenceController controller : mPreferenceControllers) {
             if (controller instanceof DeveloperOptionsPreferenceController) {
@@ -889,6 +901,9 @@ public class DevelopmentSettingsDashboardFragment extends RestrictedDashboardFra
 
                 @Override
                 protected boolean isPageSearchEnabled(Context context) {
+                    if (GuardTalkDeveloperOptionsPolicy.isUnlockBlocked(context)) {
+                        return false;
+                    }
                     return DevelopmentSettingsEnabler.isDevelopmentSettingsEnabled(context);
                 }
 

@@ -44,6 +44,10 @@ public class BubbleSummaryNotificationPreferenceController extends BasePreferenc
 
     @Override
     public int getAvailabilityStatus() {
+        // F-SEC-P4-SYSTEM-UI: Notifications keep/hide — bubbles.
+        if (!mContext.getResources().getBoolean(R.bool.config_show_notification_bubbles)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return BubbleHelper.isSupportedByDevice(mContext) ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
     }
 

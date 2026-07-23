@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 
 import com.android.settings.core.PreferenceControllerMixin;
+import com.android.settings.guardtalk.GuardTalkAboutPhoneVisibility;
 import com.android.settingslib.DeviceInfoUtils;
 import com.android.settingslib.core.AbstractPreferenceController;
 
@@ -41,6 +42,10 @@ public class FeedbackPreferenceController extends AbstractPreferenceController i
 
     @Override
     public boolean isAvailable() {
+        if (!GuardTalkAboutPhoneVisibility.isShown(
+                mContext, GuardTalkAboutPhoneVisibility.KEY_DEVICE_FEEDBACK)) {
+            return false;
+        }
         return !TextUtils.isEmpty(DeviceInfoUtils.getFeedbackReporterPackage(mContext));
     }
 

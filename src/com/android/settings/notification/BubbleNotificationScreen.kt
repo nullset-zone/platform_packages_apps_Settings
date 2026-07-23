@@ -74,7 +74,13 @@ open class BubbleNotificationScreen :
         )
     }
 
-    override fun isAvailable(context: Context): Boolean = BubbleHelper.isSupportedByDevice(context)
+    override fun isAvailable(context: Context): Boolean {
+        // F-SEC-P4-SYSTEM-UI: Notifications keep/hide — bubbles (SPA path).
+        if (!context.resources.getBoolean(R.bool.config_show_notification_bubbles)) {
+            return false
+        }
+        return BubbleHelper.isSupportedByDevice(context)
+    }
 
     companion object {
         const val KEY = "notification_bubbles"

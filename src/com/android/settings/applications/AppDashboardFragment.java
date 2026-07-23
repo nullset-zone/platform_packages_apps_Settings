@@ -16,17 +16,23 @@
 
 package com.android.settings.applications;
 
+import android.app.Activity;
 import android.app.settings.SettingsEnums;
 import android.content.Context;
+import android.content.Intent;
 import android.provider.SearchIndexableResource;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.settings.R;
 import com.android.settings.applications.appcompat.UserAspectRatioAppsPreferenceController;
 import com.android.settings.dashboard.DashboardFragment;
+import com.android.settings.guardtalk.GuardTalkAppsVisibility;
+import com.android.settings.guardtalk.GuardTalkConfigGateClient;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.widget.PreferenceCategoryController;
 import com.android.settingslib.core.AbstractPreferenceController;
@@ -45,6 +51,7 @@ public class AppDashboardFragment extends DashboardFragment {
     private static final String ADVANCED_CATEGORY_KEY = "advanced_category";
     private static final String ASPECT_RATIO_PREF_KEY = "aspect_ratio_apps";
     private AppsPreferenceController mAppsPreferenceController;
+    private boolean mPendingSpecialAccessAfterConfirm;
 
     private static List<AbstractPreferenceController> buildPreferenceControllers(Context context) {
         final List<AbstractPreferenceController> controllers = new ArrayList<>();
@@ -104,6 +111,42 @@ public class AppDashboardFragment extends DashboardFragment {
     @Override
     protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         return buildPreferenceControllers(context);
+    }
+
+    @Override
+    public boolean onPreferenceTreeClick(Preference preference) {
+        if (GuardTalkSpecialAccessPreferenceController.isSpecialAccessKey(preference.getKey())
+                && GuardTalkAppsVisibility.specialAccessRequiresMaintenance(requireContext())
+                && !GuardTalkConfigGateClient.isMaintenanceAuthorized(requireContext())) {
+            mPendingSpecialAccessAfterConfirm = true;
+            if (!GuardTalkConfigGateClient.startConfirm(this)) {
+                mPendingSpecialAccessAfterConfirm = false;
+                Toast.makeText(getContext(), R.string.guardtalk_maintenance_toast_denied,
+                        Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+        return super.onPreferenceTreeClick(preference);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (GuardTalkConfigGateClient.handleActivityResult(
+                requireContext(), requestCode, resultCode)) {
+            if (resultCode == Activity.RESULT_OK && mPendingSpecialAccessAfterConfirm
+                    && GuardTalkConfigGateClient.isMaintenanceAuthorized(requireContext())) {
+                mPendingSpecialAccessAfterConfirm = false;
+                final Preference pref = findPreference(GuardTalkAppsVisibility.KEY_SPECIAL_ACCESS);
+                if (pref != null) {
+                    super.onPreferenceTreeClick(pref);
+                }
+            } else {
+                mPendingSpecialAccessAfterConfirm = false;
+            }
+            updatePreferenceStates();
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =

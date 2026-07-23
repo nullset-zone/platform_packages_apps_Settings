@@ -34,6 +34,7 @@ import androidx.preference.PreferenceScreen;
 
 import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
+import com.android.settings.guardtalk.GuardTalkAppsVisibility;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -67,6 +68,10 @@ public final class HibernatedAppsPreferenceController extends BasePreferenceCont
 
     @Override
     public int getAvailabilityStatus() {
+        if (!GuardTalkAppsVisibility.isShown(
+                mContext, GuardTalkAppsVisibility.KEY_HIBERNATED_APPS)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return isHibernationEnabled() ? AVAILABLE : CONDITIONALLY_UNAVAILABLE;
     }
 

@@ -28,15 +28,11 @@ public class TopLevelAccountEntryPreferenceController extends BasePreferenceCont
 
     @Override
     public int getAvailabilityStatus() {
-        // T-SETTINGS-REDUCE2 (GuardTalkOS): "Passwords & passkeys" (titled via
-        // account_dashboard_title_with_passkeys) is gated out of the GuardTalk
-        // top-level scope. The controller has no AOSP config_* visibility bool
-        // to override (verified), so guard on the GuardTalkSettingsOverlay
-        // config_show_sim_info=false flag (radio excised -- reused as the
-        // GuardTalk "minimal mode" signal) to force-hide the row. Reversible:
-        // set config_show_sim_info=true to restore.
+        // T-SEC-P1-SETTINGS: dedicated keep/hide hook (replaces config_show_sim_info
+        // reuse). GuardTalkSettingsOverlay sets
+        // config_show_top_level_accounts=false. Reversible via overlay.
         if (!mContext.getResources().getBoolean(
-                com.android.settings.R.bool.config_show_sim_info)) {
+                com.android.settings.R.bool.config_show_top_level_accounts)) {
             return UNSUPPORTED_ON_DEVICE;
         }
         return AVAILABLE;

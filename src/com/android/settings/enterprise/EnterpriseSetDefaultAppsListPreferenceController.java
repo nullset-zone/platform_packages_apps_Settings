@@ -37,6 +37,7 @@ import com.android.settings.applications.ApplicationFeatureProvider;
 import com.android.settings.applications.EnterpriseDefaultApps;
 import com.android.settings.applications.UserAppInfo;
 import com.android.settings.core.PreferenceControllerMixin;
+import com.android.settings.guardtalk.GuardTalkContactsVisibility;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.users.UserFeatureProvider;
 import com.android.settingslib.core.AbstractPreferenceController;
@@ -159,6 +160,11 @@ public class EnterpriseSetDefaultAppsListPreferenceController extends
         for (EnterpriseDefaultApps typeOfDefault : EnterpriseDefaultApps.values()) {
             final List<ApplicationInfo> appsForCategory = apps.get(typeOfDefault);
             if (appsForCategory == null || appsForCategory.isEmpty()) {
+                continue;
+            }
+            // T-SEC-P1-CONTACTS: suppress Contacts from Default apps enterprise list.
+            if (typeOfDefault == EnterpriseDefaultApps.CONTACTS
+                    && GuardTalkContactsVisibility.isUiHidden(prefContext)) {
                 continue;
             }
             final Preference preference = new Preference(prefContext);

@@ -86,6 +86,7 @@ import com.android.settings.SettingsActivity;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.SetupWizardUtils;
 import com.android.settings.Utils;
+import com.android.settings.guardtalk.GuardTalkLockPolicyHelper;
 import com.android.settings.biometrics.BiometricEnrollActivity;
 import com.android.settings.biometrics.BiometricEnrollBase;
 import com.android.settings.biometrics.BiometricUtils;
@@ -290,6 +291,13 @@ public class ChooseLockGeneric extends SettingsActivity {
                     ChooseLockSettingsHelper.EXTRA_KEY_FOR_FACE, false);
             mForBiometrics = intent.getBooleanExtra(
                     ChooseLockSettingsHelper.EXTRA_KEY_FOR_BIOMETRICS, false);
+            // GuardTalkOS T-SEC-P2-LOCK: block biometric enrollment/selection paths.
+            if (GuardTalkLockPolicyHelper.isBiometricEnrollBlocked(activity)) {
+                mForFingerprint = false;
+                mForFace = false;
+                mForBiometrics = false;
+                mRequestGatekeeperPasswordHandle = false;
+            }
             mWaitingForBiometricEnrollment = mForBiometrics || mForFingerprint || mForFace;
 
             mExtraLockScreenTitleResId = intent.getIntExtra(EXTRA_KEY_CHOOSE_LOCK_SCREEN_TITLE, -1);

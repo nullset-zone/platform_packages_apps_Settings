@@ -21,6 +21,7 @@ import android.text.TextUtils;
 
 import androidx.preference.Preference;
 
+import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.overlay.FeatureFactory;
@@ -38,6 +39,14 @@ public class TopLevelSecurityEntryPreferenceController extends BasePreferenceCon
 
     @Override
     public int getAvailabilityStatus() {
+        // T-SEC-P1-SETTINGS: dedicated keep/hide hook (replaces Safety-Center-only gate).
+        if (!mContext.getResources().getBoolean(R.bool.config_show_top_level_security)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
+        // GuardTalk Security dashboard remains visible even when Safety Center is on.
+        if (mSecuritySettingsFeatureProvider.hasAlternativeSecuritySettingsFragment()) {
+            return AVAILABLE;
+        }
         if (!SafetyCenterManagerWrapper.get().isEnabled(mContext)) {
             return AVAILABLE;
         }

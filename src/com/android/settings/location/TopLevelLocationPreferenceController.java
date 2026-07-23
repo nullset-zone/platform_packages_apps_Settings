@@ -46,16 +46,11 @@ public class TopLevelLocationPreferenceController extends BasePreferenceControll
 
     @Override
     public int getAvailabilityStatus() {
-        // T-SETTINGS-REDUCE2 (GuardTalkOS): the GNSS HAL is excised
-        // (loc-excised.mk) and network location alone is not a meaningful
-        // top-level entry for this minimal image. The controller has no AOSP
-        // config_* visibility bool to override (verified: the upstream
-        // controller unconditionally returns AVAILABLE), so guard on the
-        // GuardTalkSettingsOverlay config_show_sim_info=false flag (radio
-        // excised) to force-hide the row. Reversible: set
-        // config_show_sim_info=true to restore.
+        // T-SEC-P1-SETTINGS: dedicated keep/hide hook (replaces config_show_sim_info
+        // reuse). GuardTalkSettingsOverlay sets
+        // config_show_top_level_location=false. Reversible via overlay.
         if (!mContext.getResources().getBoolean(
-                com.android.settings.R.bool.config_show_sim_info)) {
+                com.android.settings.R.bool.config_show_top_level_location)) {
             return UNSUPPORTED_ON_DEVICE;
         }
         return AVAILABLE;

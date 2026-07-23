@@ -514,6 +514,105 @@
     <!-- Whether top_level_display should be shown or not. -->
     <bool name="config_show_top_level_display">true</bool>
 
+    <!--
+      GuardTalkOS Main Settings visibility policy hooks (T-SEC-P1-SETTINGS).
+      Overlay via GuardTalkSettingsOverlay (true=show, false=hide). Frontend
+      F-SEC-P1-SETTINGS-UI owns the keep/hide matrix values. See
+      vendor/guardtalk/docs/SETTINGS_VISIBILITY_POLICY.md.
+    -->
+    <bool name="config_show_top_level_network">true</bool>
+    <bool name="config_show_top_level_apps">true</bool>
+    <bool name="config_show_top_level_notifications">true</bool>
+    <bool name="config_show_top_level_sound">true</bool>
+    <bool name="config_show_top_level_priority_modes">true</bool>
+    <bool name="config_show_top_level_storage">true</bool>
+    <bool name="config_show_top_level_system">true</bool>
+    <bool name="config_show_top_level_about_device">true</bool>
+    <bool name="config_show_top_level_security">true</bool>
+    <bool name="config_show_top_level_privacy">true</bool>
+    <bool name="config_show_top_level_location">true</bool>
+    <bool name="config_show_top_level_accounts">true</bool>
+    <bool name="config_show_top_level_safety_center">true</bool>
+    <!-- When true, Security opens GuardTalkSecurityDashboardFragment (skeleton). -->
+    <bool name="config_use_guardtalk_security_dashboard">false</bool>
+
+    <!--
+      GuardTalkOS About-phone + Developer Options policy (T-SEC-P1-DEVOPTS).
+      Overlay via GuardTalkSettingsOverlay. See
+      vendor/guardtalk/docs/ABOUT_PHONE_DEVOPTS_POLICY.md.
+      Build number must remain visible (config_show_about_build_number=true).
+      When config_guardtalk_block_developer_options_unlock is true, seven taps
+      on Build number must not unlock Developer Options.
+    -->
+    <bool name="config_show_about_build_number">true</bool>
+    <bool name="config_show_about_firmware_version">true</bool>
+    <bool name="config_show_about_battery_info">true</bool>
+    <bool name="config_guardtalk_block_developer_options_unlock">false</bool>
+
+    <!--
+      GuardTalkOS password-only device lock (T-SEC-P2-LOCK).
+      Overlay via GuardTalkSettingsOverlay. Reinforced by
+      ro.guardtalk.password_only_lock. See
+      vendor/guardtalk/docs/PASSWORD_ONLY_LOCK_POLICY.md.
+    -->
+    <bool name="config_guardtalk_password_only_lock">false</bool>
+    <bool name="config_guardtalk_block_smart_lock">false</bool>
+    <bool name="config_guardtalk_block_biometric_enroll">false</bool>
+    <!-- T-SEC-P2-SENSOR: mic/camera off when locked / pre-first-unlock; lockdown fail-closed -->
+    <bool name="config_guardtalk_sensor_privacy_when_locked">false</bool>
+    <bool name="config_guardtalk_lockdown_fail_closed">false</bool>
+    <!-- T-SEC-P2-USB: USB data off when locked / pre-first-unlock; charging-only -->
+    <bool name="config_guardtalk_usb_protection_fail_closed">false</bool>
+    <!-- T-SEC-P2-AUTOREBOOT: Off/1h/2h/4h/8h profiles + exclusion windows -->
+    <bool name="config_guardtalk_auto_reboot_profiles">false</bool>
+    <!-- T-SEC-P2-WIPE: Secure wipe + Duress + anti-bruteforce@10 (no Wipe/Duress QS) -->
+    <bool name="config_guardtalk_secure_wipe_enabled">false</bool>
+
+    <!-- Extra About-phone keys (F-SEC-P1-ABOUT-APPS). Overlay via GuardTalkSettingsOverlay. -->
+    <bool name="config_show_about_legal_info">true</bool>
+    <bool name="config_show_about_safety_info">true</bool>
+    <bool name="config_show_about_bt_address">true</bool>
+    <bool name="config_show_about_uptime">true</bool>
+    <bool name="config_show_about_device_feedback">true</bool>
+    <bool name="config_show_about_fcc_equipment_id">true</bool>
+
+    <!--
+      GuardTalkOS Apps / Network keep-hide + maintenance gate (F-SEC-P1-ABOUT-APPS).
+      Overlay via GuardTalkSettingsOverlay. special_access stays visible but requires
+      GT Config password session (maintenance_access) before opening.
+    -->
+    <bool name="config_show_apps_default_apps">true</bool>
+    <bool name="config_show_apps_special_access">true</bool>
+    <bool name="config_show_apps_aspect_ratio">true</bool>
+    <bool name="config_show_apps_hibernated">true</bool>
+    <bool name="config_show_apps_battery_usage">true</bool>
+    <bool name="config_apps_special_access_requires_maintenance">false</bool>
+
+    <!--
+      GuardTalkOS Phase-4 system keep-hide (F-SEC-P4-SYSTEM-UI).
+      Overlay via GuardTalkSettingsOverlay. Defaults keep AOSP-visible rows;
+      product overlay applies the KEEP/HIDE matrix. See
+      vendor/guardtalk/docs/SETTINGS_VISIBILITY_POLICY.md.
+    -->
+    <bool name="config_show_notification_bubbles">true</bool>
+    <bool name="config_show_notification_summarization">true</bool>
+    <bool name="config_show_notification_bundling">true</bool>
+    <bool name="config_show_view_logs">true</bool>
+    <bool name="config_security_mutations_require_password">false</bool>
+
+    <!--
+      GuardTalkOS Contacts UI suppression (T-SEC-P1-CONTACTS).
+      When true: hide Contacts / Contacts Storage from Settings Apps lists,
+      Settings search, and the Apps → Contacts storage preference. Does NOT
+      uninstall Contacts or ContactsProvider. Overlay via
+      GuardTalkSettingsOverlay. See vendor/guardtalk/docs/CONTACTS_UI_SUPPRESSION.md.
+    -->
+    <bool name="config_guardtalk_hide_contacts_ui">false</bool>
+    <string-array name="config_guardtalk_hidden_contacts_packages" translatable="false">
+        <item>com.android.contacts</item>
+        <item>com.android.providers.contacts</item>
+    </string-array>
+
     <!-- Whether wifi_ip_address should be shown or not. -->
     <bool name="config_show_wifi_ip_address">true</bool>
 

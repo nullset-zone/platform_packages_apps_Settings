@@ -20,6 +20,8 @@ import static com.google.common.truth.Truth.assertThat;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.android.settingslib.guardtalk.GuardTalkSettingsVisibilityKeys;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,19 +33,29 @@ public class SecuritySettingsFeatureProviderImplTest {
 
     @Before
     public void setUp() {
+        // No-arg ctor keeps AOSP default (GuardTalk dashboard off).
         mSecuritySettingsFeatureProvider = new SecuritySettingsFeatureProviderImpl();
     }
 
     @Test
-    public void hasAlternativeSecuritySettingsFragment_returnsFalse() {
+    public void hasAlternativeSecuritySettingsFragment_returnsFalseByDefault() {
         assertThat(mSecuritySettingsFeatureProvider.hasAlternativeSecuritySettingsFragment())
                 .isFalse();
     }
 
     @Test
-    public void getAlternativeSecuritySettingsFragmentClassname_returnsNull() {
+    public void getAlternativeSecuritySettingsFragmentClassname_returnsNullByDefault() {
         String alternativeFragmentClassname =
                 mSecuritySettingsFeatureProvider.getAlternativeSecuritySettingsFragmentClassname();
         assertThat(alternativeFragmentClassname).isNull();
+    }
+
+    @Test
+    public void hasAlternativeSecuritySettingsFragment_whenEnabled_returnsTrue() {
+        SecuritySettingsFeatureProviderImpl enabled =
+                new SecuritySettingsFeatureProviderImpl(true);
+        assertThat(enabled.hasAlternativeSecuritySettingsFragment()).isTrue();
+        assertThat(enabled.getAlternativeSecuritySettingsFragmentClassname())
+                .isEqualTo(GuardTalkSettingsVisibilityKeys.GUARDTALK_SECURITY_DASHBOARD_FRAGMENT);
     }
 }

@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 
 import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
+import com.android.settings.guardtalk.GuardTalkAppsVisibility;
 
 /**
  * Preference controller for
@@ -37,6 +38,10 @@ public class UserAspectRatioAppsPreferenceController extends BasePreferenceContr
 
     @Override
     public int getAvailabilityStatus() {
+        if (!GuardTalkAppsVisibility.isShown(
+                mContext, GuardTalkAppsVisibility.KEY_ASPECT_RATIO_APPS)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return UserAspectRatioManager.isFeatureEnabled(mContext)
                 ? AVAILABLE : CONDITIONALLY_UNAVAILABLE;
     }

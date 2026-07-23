@@ -30,6 +30,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
 import com.android.settings.core.BasePreferenceController;
+import com.android.settings.guardtalk.GuardTalkAppsVisibility;
 import com.android.settingslib.applications.AppUtils;
 
 import java.util.ArrayList;
@@ -49,7 +50,9 @@ public class DefaultAppsPreferenceController extends BasePreferenceController {
 
     @Override
     public int getAvailabilityStatus() {
-        return AVAILABLE;
+        return GuardTalkAppsVisibility.isShown(mContext, GuardTalkAppsVisibility.KEY_DEFAULT_APPS)
+                ? AVAILABLE
+                : UNSUPPORTED_ON_DEVICE;
     }
 
     @Override

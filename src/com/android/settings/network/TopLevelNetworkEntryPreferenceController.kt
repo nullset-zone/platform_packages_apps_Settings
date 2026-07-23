@@ -37,6 +37,11 @@ constructor(
 ) : BasePreferenceController(context, preferenceKey) {
 
     override fun getAvailabilityStatus(): Int {
+        // T-SEC-P1-SETTINGS: dedicated keep/hide hook for Network & internet.
+        // Network controls stay under Network — never under Security.
+        if (!mContext.resources.getBoolean(R.bool.config_show_top_level_network)) {
+            return UNSUPPORTED_ON_DEVICE
+        }
         // TODO(b/281597506): Update the ActivityEmbeddingUtils.isEmbeddingActivityEnabled
         //                    while getting the new API.
         return if (isDemoUser() && !isEmbeddingActivityEnabled()) {

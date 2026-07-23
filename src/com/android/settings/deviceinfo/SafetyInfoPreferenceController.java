@@ -23,6 +23,7 @@ import android.text.TextUtils;
 import androidx.preference.Preference;
 
 import com.android.settings.core.PreferenceControllerMixin;
+import com.android.settings.guardtalk.GuardTalkAboutPhoneVisibility;
 import com.android.settingslib.core.AbstractPreferenceController;
 
 public class SafetyInfoPreferenceController extends AbstractPreferenceController implements
@@ -41,6 +42,10 @@ public class SafetyInfoPreferenceController extends AbstractPreferenceController
 
     @Override
     public boolean isAvailable() {
+        if (!GuardTalkAboutPhoneVisibility.isShown(
+                mContext, GuardTalkAboutPhoneVisibility.KEY_SAFETY_INFO)) {
+            return false;
+        }
         return !mPackageManager.queryIntentActivities(INTENT_PROBE, 0).isEmpty();
     }
 

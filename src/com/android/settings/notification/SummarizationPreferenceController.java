@@ -36,6 +36,10 @@ public class SummarizationPreferenceController extends BasePreferenceController 
 
     @Override
     public int getAvailabilityStatus() {
+        // F-SEC-P4-SYSTEM-UI: Notifications keep/hide — summarization.
+        if (!mContext.getResources().getBoolean(R.bool.config_show_notification_summarization)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return (Flags.nmSummarization() || Flags.nmSummarizationUi())
                 && mBackend.isNotificationSummarizationSupported()
                 ? AVAILABLE : CONDITIONALLY_UNAVAILABLE;

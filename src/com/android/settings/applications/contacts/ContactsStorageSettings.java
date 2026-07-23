@@ -42,6 +42,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.settings.R;
 import com.android.settings.accounts.AddAccountSettings;
 import com.android.settings.dashboard.DashboardFragment;
+import com.android.settings.guardtalk.GuardTalkContactsVisibility;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.RestrictedPreference;
 import com.android.settingslib.accounts.AuthenticatorHelper;
@@ -60,7 +61,13 @@ public class ContactsStorageSettings extends DashboardFragment
         implements SelectorWithWidgetPreference.OnClickListener, OnPreferenceClickListener,
         AuthenticatorHelper.OnAccountsUpdateListener {
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider(R.xml.contacts_storage_settings);
+            new BaseSearchIndexProvider(R.xml.contacts_storage_settings) {
+                @Override
+                protected boolean isPageSearchEnabled(Context context) {
+                    // T-SEC-P1-CONTACTS: de-index Contacts storage from Settings search.
+                    return !GuardTalkContactsVisibility.isUiHidden(context);
+                }
+            };
     private static final String TAG = "ContactsStorageSettings";
     private static final String PREF_KEY_ADD_ACCOUNT = "add_account";
     private static final String PREF_KEY_DEVICE_ONLY = "device_only_account_preference";
