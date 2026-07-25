@@ -63,5 +63,10 @@ public class TapScreenGestureSettings extends DashboardFragment {
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider(R.xml.tap_screen_gesture_settings);
+            new BaseSearchIndexProvider(R.xml.tap_screen_gesture_settings) {
+                @Override
+                protected boolean isPageSearchEnabled(Context context) {
+                    return GesturesSettingPreferenceController.isGestureSettingsAvailable(context);
+                }
+            };
 }

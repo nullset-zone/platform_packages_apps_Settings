@@ -75,7 +75,8 @@ public class GuardTalkLockdownPreferenceController extends BasePreferenceControl
         } else if (GuardTalkSensorPrivacyHelper.isLockdownFailClosedEnabled(mContext)) {
             preference.setSummary(R.string.guardtalk_security_lockdown_summary_ready);
         } else {
-            preference.setSummary(R.string.guardtalk_security_stub_summary);
+            // Immediate lockdown action still works — honest inactive, not stub.
+            preference.setSummary(R.string.guardtalk_security_status_inactive);
         }
     }
 

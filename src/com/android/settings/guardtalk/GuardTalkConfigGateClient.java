@@ -34,7 +34,8 @@ import androidx.fragment.app.Fragment;
  * <p>Frontend (`F-SEC-P1-ABOUT-APPS` / GT Config UX) should:
  * <ol>
  *   <li>Launch {@link #createConfirmIntent} via fragment startActivityForResult</li>
- *   <li>On {@link Activity#RESULT_OK}, call {@link #onCredentialConfirmed}</li>
+ *   <li>On {@link Activity#RESULT_OK}, call {@link #handleActivityResult} and
+ *       check {@link #wasSessionOpened} (fail-closed)</li>
  *   <li>Before Security mutations, call {@link #assertAuthorized} or
  *       {@link GuardTalkConfigGateManager#isMutationAuthorized}</li>
  * </ol>
@@ -90,14 +91,29 @@ public final class GuardTalkConfigGateClient {
         if (requestCode != REQUEST_CONFIRM_FOR_GT_CONFIG) {
             return false;
         }
+        // Consume the request code; callers must use {@link #wasSessionOpened} for
+        // fail-closed follow-up (credential OK ≠ session open).
         if (resultCode == Activity.RESULT_OK) {
             final boolean opened = GuardTalkConfigGateManager.onDeviceCredentialConfirmed(context);
             if (!opened) {
                 Log.e(TAG, "Credential OK but gate refused session (fail-closed)");
             }
+            sLastSessionOpenSucceeded = opened;
+        } else {
+            sLastSessionOpenSucceeded = false;
         }
         return true;
     }
+
+    /**
+     * Result of the last consumed {@link #handleActivityResult} confirm attempt.
+     * Fail-closed default is false until a successful session open.
+     */
+    public static boolean wasSessionOpened() {
+        return sLastSessionOpenSucceeded;
+    }
+
+    private static volatile boolean sLastSessionOpenSucceeded;
 
     /**
      * Fail-closed assert before applying a Security / GT Config mutation from Settings.

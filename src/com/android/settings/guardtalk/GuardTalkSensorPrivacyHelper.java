@@ -45,8 +45,10 @@ public final class GuardTalkSensorPrivacyHelper {
         if (context.getResources().getBoolean(R.bool.config_guardtalk_sensor_privacy_when_locked)) {
             return true;
         }
+        // Overlay OR product prop OR framework policy (avoid stub "Coming soon").
         return SystemProperties.getBoolean(
-                GuardTalkSensorPrivacyKeys.PROP_SENSOR_PRIVACY_WHEN_LOCKED, false);
+                GuardTalkSensorPrivacyKeys.PROP_SENSOR_PRIVACY_WHEN_LOCKED, false)
+                || GuardTalkSensorPrivacyPolicy.isSensorPrivacyWhenLockedEnabled();
     }
 
     /** Lockdown forces sensors + network fail-closed. */
@@ -56,10 +58,12 @@ public final class GuardTalkSensorPrivacyHelper {
         }
         if (SystemProperties.get(GuardTalkSensorPrivacyKeys.PROP_LOCKDOWN_FAIL_CLOSED, "")
                 .isEmpty()) {
-            return isSensorPrivacyWhenLockedEnabled(context);
+            return isSensorPrivacyWhenLockedEnabled(context)
+                    || GuardTalkSensorPrivacyPolicy.isLockdownFailClosedEnabled();
         }
         return SystemProperties.getBoolean(
-                GuardTalkSensorPrivacyKeys.PROP_LOCKDOWN_FAIL_CLOSED, false);
+                GuardTalkSensorPrivacyKeys.PROP_LOCKDOWN_FAIL_CLOSED, false)
+                || GuardTalkSensorPrivacyPolicy.isLockdownFailClosedEnabled();
     }
 
     /** True when sensors are currently force-denied by policy. */

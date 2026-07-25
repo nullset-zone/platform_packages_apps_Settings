@@ -21,6 +21,7 @@ import android.hardware.display.AmbientDisplayConfiguration;
 
 import androidx.annotation.NonNull;
 
+import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settingslib.core.AbstractPreferenceController;
 
@@ -36,8 +37,20 @@ public class GesturesSettingPreferenceController extends BasePreferenceControlle
         super(context, key);
     }
 
+    /**
+     * Whether System → Gestures (and gesture Settings search pages) are visible.
+     * Overlay: {@code config_show_gesture_settings} (F-SYS-HIDE-GESTURE-BACKUP).
+     */
+    public static boolean isGestureSettingsAvailable(@NonNull Context context) {
+        return context.getResources().getBoolean(R.bool.config_show_gesture_settings);
+    }
+
     @Override
     public int getAvailabilityStatus() {
+        // F-SYS-HIDE-GESTURE-BACKUP: UI-hide System Gestures entry + drive search gates.
+        if (!isGestureSettingsAvailable(mContext)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         if (mGestureControllers == null) {
             mGestureControllers = buildAllPreferenceControllers(mContext);
         }

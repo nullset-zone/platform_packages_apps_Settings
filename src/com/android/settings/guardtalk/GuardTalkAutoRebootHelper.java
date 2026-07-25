@@ -45,8 +45,10 @@ public final class GuardTalkAutoRebootHelper {
         if (context.getResources().getBoolean(R.bool.config_guardtalk_auto_reboot_profiles)) {
             return true;
         }
+        // Overlay OR product prop OR framework policy (avoid stub "Coming soon").
         return SystemProperties.getBoolean(
-                GuardTalkAutoRebootKeys.PROP_AUTO_REBOOT_PROFILES, false);
+                GuardTalkAutoRebootKeys.PROP_AUTO_REBOOT_PROFILES, false)
+                || GuardTalkAutoRebootPolicy.isProfilesEnabled();
     }
 
     /** Effective profile timeout in milliseconds (clamped when profiles on). */

@@ -60,7 +60,8 @@ public class GuardTalkUsbProtectionPreferenceController extends BasePreferenceCo
         } else if (GuardTalkUsbProtectionHelper.isFailClosedEnabled(mContext)) {
             preference.setSummary(R.string.guardtalk_security_usb_protection_summary_policy);
         } else {
-            preference.setSummary(R.string.guardtalk_security_stub_summary);
+            // ExploitProtection USB-C picker still opens — honest inactive, not stub.
+            preference.setSummary(R.string.guardtalk_security_status_inactive);
         }
     }
 

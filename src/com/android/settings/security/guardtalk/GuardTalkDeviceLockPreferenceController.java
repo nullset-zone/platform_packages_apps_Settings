@@ -64,7 +64,8 @@ public class GuardTalkDeviceLockPreferenceController extends BasePreferenceContr
         } else if (GuardTalkLockPolicyHelper.isPasswordOnlyLockEnabled(mContext)) {
             preference.setSummary(R.string.guardtalk_security_device_lock_summary_password_only);
         } else {
-            preference.setSummary(R.string.guardtalk_security_stub_summary);
+            // Live ChooseLockGeneric path still works — never false "Coming soon".
+            preference.setSummary(R.string.guardtalk_security_status_inactive);
         }
     }
 

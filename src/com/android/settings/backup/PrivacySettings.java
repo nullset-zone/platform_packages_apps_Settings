@@ -72,6 +72,10 @@ public class PrivacySettings extends DashboardFragment {
 
                 @Override
                 protected boolean isPageSearchEnabled(Context context) {
+                    // F-SYS-HIDE-GESTURE-BACKUP
+                    if (!context.getResources().getBoolean(R.bool.config_show_backup_settings)) {
+                        return false;
+                    }
                     final BackupSettingsHelper backupHelper = new BackupSettingsHelper(context);
                     return !backupHelper.isBackupProvidedByManufacturer() &&
                             !backupHelper.isIntentProvidedByTransport();

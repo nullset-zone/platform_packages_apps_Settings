@@ -67,6 +67,11 @@ public class GestureSettings extends DashboardFragment {
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
             new BaseSearchIndexProvider(R.xml.gestures) {
                 @Override
+                protected boolean isPageSearchEnabled(Context context) {
+                    return GesturesSettingPreferenceController.isGestureSettingsAvailable(context);
+                }
+
+                @Override
                 public List<String> getNonIndexableKeys(Context context) {
                     final List<String> keys = super.getNonIndexableKeys(context);
                     // de-duplicated due to another same entry in Sound page

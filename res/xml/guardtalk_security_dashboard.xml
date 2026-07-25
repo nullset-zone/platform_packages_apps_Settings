@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  GuardTalkOS Security dashboard (F-SEC-P2-SECURITY-SCREENS).
-  Wired to Backend policy controllers. Network / VPN / Wi-Fi / Hotspot /
-  Airplane MUST NOT appear here. No Lockdown/USB/Wipe/Duress QS tiles.
+  GuardTalkOS Security dashboard (F-SEC-ACTIVATE-UI).
+  Every listed preference uses a live controller (working screen or status).
+  Browse ungated; mutations password-gated when overlay requires it.
+  Network / VPN / Wi-Fi / Hotspot / Airplane MUST NOT appear here.
+  No Lockdown/USB/Wipe/Duress QS tiles.
 -->
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -121,9 +123,9 @@
             android:key="guardtalk_gt_info"
             android:title="@string/guardtalk_gt_info_title"
             android:summary="@string/guardtalk_gt_info_summary"
-            android:enabled="false"
-            android:selectable="false"
-            settings:controller="com.android.settings.security.guardtalk.GuardTalkSecurityStubPreferenceController"
+            android:enabled="true"
+            android:selectable="true"
+            settings:controller="com.android.settings.security.guardtalk.GuardTalkGtInfoPreferenceController"
             android:order="20" />
     </PreferenceCategory>
 

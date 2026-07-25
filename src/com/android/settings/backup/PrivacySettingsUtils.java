@@ -27,6 +27,8 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.util.Log;
 
+import com.android.settings.R;
+
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -62,6 +64,15 @@ public class PrivacySettingsUtils {
     }
 
     private static Set<String> getInvisibleKey(final Context context) {
+        // F-SYS-HIDE-GESTURE-BACKUP: force-hide all backup_* Privacy rows when overlay false.
+        if (!context.getResources().getBoolean(R.bool.config_show_backup_settings)) {
+            final Set<String> hidden = new TreeSet<>();
+            hidden.add(BACKUP_INACTIVE);
+            hidden.add(BACKUP_DATA);
+            hidden.add(AUTO_RESTORE);
+            hidden.add(CONFIGURE_ACCOUNT);
+            return hidden;
+        }
         final IBackupManager backupManager = IBackupManager.Stub.asInterface(
                 ServiceManager.getService(Context.BACKUP_SERVICE));
         boolean isServiceActive = false;

@@ -127,7 +127,8 @@ public class OneHandedSettings extends BaseSupportFragment {
             new BaseSearchIndexProvider(R.xml.one_handed_settings) {
                 @Override
                 protected boolean isPageSearchEnabled(Context context) {
-                    return OneHandedSettingsUtils.isSupportOneHandedMode();
+                    return GesturesSettingPreferenceController.isGestureSettingsAvailable(context)
+                            && OneHandedSettingsUtils.isSupportOneHandedMode();
                 }
             };
 

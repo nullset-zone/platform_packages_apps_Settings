@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.app.settings.SettingsEnums;
 import android.content.Context;
 import android.content.Intent;
-import android.guardtalk.GuardTalkConfigGateManager;
 import android.guardtalk.GuardTalkConfigMutations;
 import android.util.Log;
 import android.widget.Toast;
@@ -38,13 +37,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * GuardTalkOS Security dashboard (T-SEC-P1-SETTINGS / F-SEC-P2 / F-SEC-P4).
+ * GuardTalkOS Security dashboard (F-SEC-ACTIVATE-UI).
  *
- * <p>Hosts Security surfaces and the GT Config password gate entry. Must not
- * host network controls. When
- * {@code config_security_mutations_require_password} is true, Security
- * mutation rows require a main-device-password session before opening
- * (F-SEC-P4-SYSTEM-UI).
+ * <p>Browse of Security / GT Config / GT Info is ungated. When
+ * {@code config_security_mutations_require_password} is true, the seven
+ * Security mutation rows require a main-device-password session before opening.
+ * GT Config <em>writes</em> remain fail-closed inside GuardTalkConfig
+ * ({@code gt_config_write}). Must not host network controls.
  */
 @SearchIndexable
 public class GuardTalkSecurityDashboardFragment extends DashboardFragment {
@@ -73,7 +72,6 @@ public class GuardTalkSecurityDashboardFragment extends DashboardFragment {
                 GuardTalkConfigMutations.SECURITY_SECURE_WIPE);
     }
 
-    private boolean mLaunchGtConfigAfterConfirm;
     @Nullable private String mPendingMutationPreferenceKey;
 
     @Override
@@ -119,13 +117,12 @@ public class GuardTalkSecurityDashboardFragment extends DashboardFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (GuardTalkConfigGateClient.handleActivityResult(
                 requireContext(), requestCode, resultCode)) {
-            if (resultCode == Activity.RESULT_OK) {
-                Toast.makeText(getContext(), R.string.guardtalk_gt_config_toast_unlocked,
+            final boolean sessionOpened = resultCode == Activity.RESULT_OK
+                    && GuardTalkConfigGateClient.wasSessionOpened();
+            if (sessionOpened) {
+                Toast.makeText(getContext(), R.string.guardtalk_security_toast_unlocked,
                         Toast.LENGTH_SHORT).show();
-                if (mLaunchGtConfigAfterConfirm) {
-                    mLaunchGtConfigAfterConfirm = false;
-                    launchGtConfig(requireContext());
-                } else if (mPendingMutationPreferenceKey != null) {
+                if (mPendingMutationPreferenceKey != null) {
                     final String pending = mPendingMutationPreferenceKey;
                     mPendingMutationPreferenceKey = null;
                     final Preference pref = findPreference(pending);
@@ -133,13 +130,19 @@ public class GuardTalkSecurityDashboardFragment extends DashboardFragment {
                         // Session open — let controllers handle the real navigation.
                         super.onPreferenceTreeClick(pref);
                     } else {
-                        Toast.makeText(getContext(), R.string.guardtalk_gt_config_toast_denied,
+                        Toast.makeText(getContext(),
+                                R.string.guardtalk_security_toast_mutation_denied,
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
             } else {
-                mLaunchGtConfigAfterConfirm = false;
+                // Fail-closed: credential cancel OR gate refused session.
                 mPendingMutationPreferenceKey = null;
+                if (resultCode == Activity.RESULT_OK) {
+                    Toast.makeText(getContext(),
+                            R.string.guardtalk_security_toast_mutation_denied,
+                            Toast.LENGTH_SHORT).show();
+                }
             }
             updatePreferenceStates();
             return;
@@ -147,19 +150,13 @@ public class GuardTalkSecurityDashboardFragment extends DashboardFragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * GT Config browse is ungated. Apply/writes stay fail-closed in
+     * {@code ConfigApplier} via {@code gt_config_write}.
+     */
     private boolean handleGtConfigClick() {
-        final Context context = requireContext();
-        if (GuardTalkConfigGateManager.isAuthorized(context)) {
-            launchGtConfig(context);
-            return true;
-        }
-        mLaunchGtConfigAfterConfirm = true;
         mPendingMutationPreferenceKey = null;
-        if (!GuardTalkConfigGateClient.startConfirm(this)) {
-            mLaunchGtConfigAfterConfirm = false;
-            Toast.makeText(context, R.string.guardtalk_gt_config_toast_denied,
-                    Toast.LENGTH_SHORT).show();
-        }
+        launchGtConfig(requireContext());
         return true;
     }
 
@@ -168,10 +165,10 @@ public class GuardTalkSecurityDashboardFragment extends DashboardFragment {
             return super.onPreferenceTreeClick(preference);
         }
         mPendingMutationPreferenceKey = key;
-        mLaunchGtConfigAfterConfirm = false;
         if (!GuardTalkConfigGateClient.startConfirm(this)) {
             mPendingMutationPreferenceKey = null;
-            Toast.makeText(requireContext(), R.string.guardtalk_gt_config_toast_denied,
+            Toast.makeText(requireContext(),
+                    R.string.guardtalk_security_toast_mutation_denied,
                     Toast.LENGTH_SHORT).show();
         }
         return true;
@@ -195,20 +192,8 @@ public class GuardTalkSecurityDashboardFragment extends DashboardFragment {
         }
     }
 
-    /**
-     * Opens GuardTalkConfig after a verified gate session. Fail-closed if the
-     * session cannot authorize {@code gt_config_write}.
-     */
+    /** Opens GuardTalkConfig for browse (no write-gate assert on launch). */
     private void launchGtConfig(Context context) {
-        try {
-            GuardTalkConfigGateClient.assertAuthorized(
-                    context, GuardTalkConfigMutations.GT_CONFIG_WRITE);
-        } catch (SecurityException e) {
-            Log.w(TAG, "GT Config launch blocked (fail-closed)", e);
-            Toast.makeText(context, R.string.guardtalk_gt_config_toast_denied,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
         final Intent intent = new Intent();
         intent.setClassName(GT_CONFIG_PACKAGE, GT_CONFIG_ACTIVITY);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

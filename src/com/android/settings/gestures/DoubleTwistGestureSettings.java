@@ -66,6 +66,11 @@ public class DoubleTwistGestureSettings extends DashboardFragment {
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
             new BaseSearchIndexProvider() {
                 @Override
+                protected boolean isPageSearchEnabled(Context context) {
+                    return GesturesSettingPreferenceController.isGestureSettingsAvailable(context);
+                }
+
+                @Override
                 public List<SearchIndexableResource> getXmlResourcesToIndex(
                         Context context, boolean enabled) {
                     final SearchIndexableResource sir = new SearchIndexableResource(context);

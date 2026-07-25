@@ -56,7 +56,8 @@ public class GuardTalkAutoRebootPreferenceController extends BasePreferenceContr
         preference.setEnabled(true);
         preference.setSelectable(true);
         if (!GuardTalkAutoRebootHelper.isProfilesEnabled(mContext)) {
-            preference.setSummary(R.string.guardtalk_security_stub_summary);
+            // ExploitProtection auto-reboot picker still opens — Off, not stub.
+            preference.setSummary(R.string.guardtalk_security_auto_reboot_summary_off);
             return;
         }
         if (GuardTalkAutoRebootHelper.isOff(mContext)) {

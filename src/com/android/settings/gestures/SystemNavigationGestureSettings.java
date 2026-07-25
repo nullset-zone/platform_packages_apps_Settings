@@ -293,7 +293,8 @@ public class SystemNavigationGestureSettings extends RadioButtonPickerFragment i
 
                 @Override
                 protected boolean isPageSearchEnabled(Context context) {
-                    return SystemNavigationPreferenceController.isGestureAvailable(context);
+                    return GesturesSettingPreferenceController.isGestureSettingsAvailable(context)
+                            && SystemNavigationPreferenceController.isGestureAvailable(context);
                 }
 
                 @Override

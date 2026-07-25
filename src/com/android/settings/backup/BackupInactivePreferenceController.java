@@ -18,6 +18,7 @@ package com.android.settings.backup;
 
 import android.content.Context;
 
+import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 
 public class BackupInactivePreferenceController extends BasePreferenceController {
@@ -28,6 +29,10 @@ public class BackupInactivePreferenceController extends BasePreferenceController
 
     @Override
     public int getAvailabilityStatus() {
+        // F-SYS-HIDE-GESTURE-BACKUP
+        if (!mContext.getResources().getBoolean(R.bool.config_show_backup_settings)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         if (!new BackupSettingsHelper(mContext).isBackupServiceActive()) {
             return AVAILABLE_UNSEARCHABLE;
         }

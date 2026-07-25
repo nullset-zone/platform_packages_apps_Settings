@@ -26,11 +26,10 @@ import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 
 /**
- * GT Config row: shows password-gate session state (T-SEC-P1-GTGATE).
+ * GT Config row (F-SEC-ACTIVATE-UI).
  *
- * <p>Credential confirmation is launched by
- * {@link GuardTalkSecurityDashboardFragment}; this controller only reflects
- * availability + summary for the Frontend contract.
+ * <p>Browse launch is ungated. Summary reflects write-session state: Apply
+ * still requires a password session inside GuardTalkConfig (fail-closed).
  */
 public class GuardTalkGtConfigPreferenceController extends BasePreferenceController {
 
@@ -61,7 +60,7 @@ public class GuardTalkGtConfigPreferenceController extends BasePreferenceControl
                     R.string.guardtalk_gt_config_summary_authorized,
                     DateUtils.formatElapsedTime(remaining / 1000L)));
         } else {
-            preference.setSummary(R.string.guardtalk_gt_config_summary_locked);
+            preference.setSummary(R.string.guardtalk_gt_config_summary_browse);
         }
     }
 }

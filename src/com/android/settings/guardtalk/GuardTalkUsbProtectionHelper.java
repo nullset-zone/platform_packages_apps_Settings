@@ -45,8 +45,10 @@ public final class GuardTalkUsbProtectionHelper {
                 R.bool.config_guardtalk_usb_protection_fail_closed)) {
             return true;
         }
+        // Overlay OR product prop OR framework policy (avoid stub "Coming soon").
         return SystemProperties.getBoolean(
-                GuardTalkUsbProtectionKeys.PROP_USB_PROTECTION_FAIL_CLOSED, false);
+                GuardTalkUsbProtectionKeys.PROP_USB_PROTECTION_FAIL_CLOSED, false)
+                || GuardTalkUsbProtectionPolicy.isFailClosedEnabled();
     }
 
     /** True when USB data is currently force-denied by policy. */

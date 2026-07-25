@@ -69,6 +69,9 @@ public class ButtonNavigationSettingsFragment extends DashboardFragment {
 
                 @Override
                 protected boolean isPageSearchEnabled(Context context) {
+                    if (!GesturesSettingPreferenceController.isGestureSettingsAvailable(context)) {
+                        return false;
+                    }
                     /*  Hide button navigation settings from search when contextual search is
                      *   enable to match button navigation preferences logic.
                      */

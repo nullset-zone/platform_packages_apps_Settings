@@ -598,6 +598,13 @@
     <bool name="config_show_notification_summarization">true</bool>
     <bool name="config_show_notification_bundling">true</bool>
     <bool name="config_show_view_logs">true</bool>
+    <!--
+      F-SYS-HIDE-GESTURE-BACKUP: System Gestures + Backup UI/search visibility.
+      Overlay via GuardTalkSettingsOverlay (false = hide). Hide ≠ delete APKs/services.
+      See vendor/guardtalk/docs/SETTINGS_VISIBILITY_POLICY.md.
+    -->
+    <bool name="config_show_gesture_settings">true</bool>
+    <bool name="config_show_backup_settings">true</bool>
     <bool name="config_security_mutations_require_password">false</bool>
 
     <!--

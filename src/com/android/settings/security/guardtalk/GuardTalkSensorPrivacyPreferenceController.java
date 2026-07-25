@@ -61,7 +61,8 @@ public class GuardTalkSensorPrivacyPreferenceController extends BasePreferenceCo
             preference.setSummary(
                     R.string.guardtalk_security_sensor_privacy_summary_policy);
         } else {
-            preference.setSummary(R.string.guardtalk_security_stub_summary);
+            // Privacy settings deep-link still works — honest inactive, not stub.
+            preference.setSummary(R.string.guardtalk_security_status_inactive);
         }
     }
 

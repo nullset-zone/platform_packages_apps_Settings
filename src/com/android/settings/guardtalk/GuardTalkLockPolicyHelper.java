@@ -42,7 +42,9 @@ public final class GuardTalkLockPolicyHelper {
         if (context.getResources().getBoolean(R.bool.config_guardtalk_password_only_lock)) {
             return true;
         }
-        return SystemProperties.getBoolean(GuardTalkLockPolicyKeys.PROP_PASSWORD_ONLY_LOCK, false);
+        // Overlay OR product prop OR framework policy (avoid stub "Coming soon").
+        return SystemProperties.getBoolean(GuardTalkLockPolicyKeys.PROP_PASSWORD_ONLY_LOCK, false)
+                || GuardTalkLockPolicy.isPasswordOnlyLockEnabled();
     }
 
     /** Smart Lock / trust agents blocked. */

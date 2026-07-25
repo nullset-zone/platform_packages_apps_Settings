@@ -28,10 +28,10 @@ import com.android.settings.guardtalk.GuardTalkSecurityStatusHelper;
 import com.android.settingslib.guardtalk.GuardTalkSecurityStatusKeys;
 
 /**
- * GuardTalk Security → Security status entry (F-SEC-P5-STATUS-UI).
+ * GuardTalk Security → Security status entry (F-SEC-ACTIVATE-UI).
  *
  * <p><strong>Post-unlock only.</strong> Hidden while locked / pre-first-unlock.
- * Never surfaces Duress status (lock screen must not reveal Duress).
+ * Live summary after unlock. Never surfaces Duress status.
  */
 public class GuardTalkSecurityStatusPreferenceController extends BasePreferenceController {
 
@@ -56,7 +56,12 @@ public class GuardTalkSecurityStatusPreferenceController extends BasePreferenceC
         super.updateState(preference);
         preference.setEnabled(true);
         preference.setSelectable(true);
-        preference.setSummary(R.string.guardtalk_security_status_summary);
+        if (!GuardTalkSecurityStatusHelper.isPostUnlockStatusAllowed(mContext)) {
+            preference.setSummary(R.string.guardtalk_security_status_summary_locked);
+            return;
+        }
+        // Post-unlock live messaging — tap opens full status screen.
+        preference.setSummary(R.string.guardtalk_security_status_summary_ready);
     }
 
     @Override

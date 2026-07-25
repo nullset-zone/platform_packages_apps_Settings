@@ -20,6 +20,7 @@ import android.content.Context;
 
 import androidx.preference.Preference;
 
+import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 
 public class DataManagementPreferenceController extends BasePreferenceController {
@@ -32,6 +33,10 @@ public class DataManagementPreferenceController extends BasePreferenceController
 
     @Override
     public int getAvailabilityStatus() {
+        // F-SYS-HIDE-GESTURE-BACKUP
+        if (!mContext.getResources().getBoolean(R.bool.config_show_backup_settings)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         if (!PrivacySettingsUtils.isAdminUser(mContext)) {
             return DISABLED_FOR_USER;
         }

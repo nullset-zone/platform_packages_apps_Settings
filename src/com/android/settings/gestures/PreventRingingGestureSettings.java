@@ -78,6 +78,11 @@ public class PreventRingingGestureSettings extends DashboardFragment {
             new BaseSearchIndexProvider(R.xml.prevent_ringing_gesture_settings) {
 
                 @Override
+                protected boolean isPageSearchEnabled(Context context) {
+                    return GesturesSettingPreferenceController.isGestureSettingsAvailable(context);
+                }
+
+                @Override
                 public List<AbstractPreferenceController> createPreferenceControllers(
                         Context context) {
                     return buildPreferenceControllers(context, null);

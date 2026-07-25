@@ -108,6 +108,10 @@ public class UserBackupSettingsActivity extends SettingsActivity implements Inde
                         boolean enabled) {
 
                     final List<SearchIndexableRaw> result = new ArrayList<>();
+                    // F-SYS-HIDE-GESTURE-BACKUP: do not index Backup when overlay hides it.
+                    if (!context.getResources().getBoolean(R.bool.config_show_backup_settings)) {
+                        return result;
+                    }
 
                     // Add the activity title
                     SearchIndexableRaw data = new SearchIndexableRaw(context);
@@ -126,7 +130,8 @@ public class UserBackupSettingsActivity extends SettingsActivity implements Inde
                 @Override
                 public List<String> getNonIndexableKeys(Context context) {
                     final List<String> keys = super.getNonIndexableKeys(context);
-                    if (!new BackupSettingsHelper(context).isBackupServiceActive()) {
+                    if (!context.getResources().getBoolean(R.bool.config_show_backup_settings)
+                            || !new BackupSettingsHelper(context).isBackupServiceActive()) {
                         keys.add(BACKUP_SEARCH_INDEX_KEY);
                     }
                     return keys;

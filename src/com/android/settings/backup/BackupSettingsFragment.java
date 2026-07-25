@@ -71,7 +71,13 @@ public class BackupSettingsFragment extends DashboardFragment {
     // The intention is to index {@link UserBackupSettingsActivity} instead of the fragments,
     // therefore leaving this index provider empty.
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider();
+            new BaseSearchIndexProvider() {
+                @Override
+                protected boolean isPageSearchEnabled(Context context) {
+                    // F-SYS-HIDE-GESTURE-BACKUP
+                    return context.getResources().getBoolean(R.bool.config_show_backup_settings);
+                }
+            };
 
     @Override
     public int getMetricsCategory() {

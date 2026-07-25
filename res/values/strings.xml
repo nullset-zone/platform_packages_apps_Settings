@@ -859,6 +859,7 @@
     <string name="guardtalk_security_device_category_title">Device security</string>
     <string name="guardtalk_security_status_category_title">Status</string>
     <string name="guardtalk_security_config_category_title">GuardTalk</string>
+    <!-- Legacy stub label — must not appear on live Security rows (F-SEC-ACTIVATE-UI). -->
     <string name="guardtalk_security_stub_summary">Coming soon</string>
     <string name="guardtalk_security_device_lock_title">Device lock</string>
     <!-- GuardTalkOS T-SEC-P2-LOCK: password-only device lock summary -->
@@ -903,7 +904,9 @@
     <string name="guardtalk_security_secure_wipe_failed">Secure wipe failed. Device was not erased.</string>
     <string name="guardtalk_security_status_title">Security status</string>
     <string name="guardtalk_security_status_summary">Post-unlock overview of device security policies</string>
-    <string name="guardtalk_security_status_footer">Available only after unlock. Duress status is never shown here or on the lock screen.</string>
+    <string name="guardtalk_security_status_summary_ready">Unlocked — live policy status available</string>
+    <string name="guardtalk_security_status_summary_locked">Unlock the device to view live security status</string>
+    <string name="guardtalk_security_status_footer">Live status after unlock. Duress is never shown here or on the lock screen. Network controls are not listed under Security.</string>
     <!-- F-SEC-P5-STATUS-UI: aggregate inactive / unavailable / wipe / hardening (no Duress). -->
     <string name="guardtalk_security_status_inactive">Not active on this build</string>
     <string name="guardtalk_security_status_unavailable">Unavailable</string>
@@ -927,15 +930,19 @@
     <string name="guardtalk_security_files_summary_policy">Files policy is active on this build.</string>
     <string name="guardtalk_security_files_summary_trash">Deleted files go to Trash so you can restore them.</string>
     <string name="guardtalk_security_files_summary_protect">System and firmware storage cannot be erased from Files.</string>
-    <string name="guardtalk_gt_info_summary">GuardTalkOS build and policy information</string>
+    <string name="guardtalk_gt_info_summary">Open GT Info (Validator) for build and policy checks</string>
+    <string name="guardtalk_gt_info_toast_launch_failed">GT Info is unavailable</string>
     <string name="guardtalk_gt_config_title">GT Config</string>
     <string name="guardtalk_gt_info_title">GT Info</string>
     <string name="guardtalk_gt_config_summary_locked">Requires device password</string>
-    <string name="guardtalk_gt_config_summary_authorized">Unlocked for %1$s</string>
-    <string name="guardtalk_gt_config_summary_no_password">Set a device password first</string>
-    <string name="guardtalk_gt_config_confirm_details">Enter your device password to access GT Config and Security settings</string>
+    <string name="guardtalk_gt_config_summary_browse">Browse freely; password required to apply changes</string>
+    <string name="guardtalk_gt_config_summary_authorized">Write session open for %1$s</string>
+    <string name="guardtalk_gt_config_summary_no_password">Set a device password before applying config</string>
+    <string name="guardtalk_gt_config_confirm_details">Enter your device password to change Security settings</string>
     <string name="guardtalk_gt_config_toast_unlocked">GT Config unlocked</string>
     <string name="guardtalk_gt_config_toast_denied">Password required for GT Config</string>
+    <string name="guardtalk_security_toast_unlocked">Security changes unlocked</string>
+    <string name="guardtalk_security_toast_mutation_denied">Password required to change this setting</string>
     <string name="guardtalk_gt_config_toast_launch_failed">GT Config is unavailable</string>
     <string name="guardtalk_maintenance_summary_locked">Requires device password</string>
     <string name="guardtalk_maintenance_summary_authorized">Maintenance unlocked</string>

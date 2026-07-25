@@ -64,7 +64,8 @@ public class SwipeToNotificationSettings extends DashboardFragment {
 
                 @Override
                 protected boolean isPageSearchEnabled(Context context) {
-                    return SwipeToNotificationPreferenceController.isAvailable(context);
+                    return GesturesSettingPreferenceController.isGestureSettingsAvailable(context)
+                            && SwipeToNotificationPreferenceController.isAvailable(context);
                 }
             };
 }

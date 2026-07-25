@@ -22,10 +22,11 @@ import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 
 /**
- * Availability gate for GuardTalk Security stub rows.
+ * Legacy availability gate for GuardTalk Security stub rows.
  *
- * <p>Rows remain visible (but non-interactive in XML) when the GuardTalk Security
- * dashboard is enabled, so Frontend/QA can validate hierarchy without Phase-2 logic.
+ * <p>F-SEC-ACTIVATE-UI: no dashboard preference should use this controller.
+ * Live rows use dedicated controllers with working screens or read-only status.
+ * Kept only so residual XML references (if any) do not break inflation.
  */
 public class GuardTalkSecurityStubPreferenceController extends BasePreferenceController {
 
