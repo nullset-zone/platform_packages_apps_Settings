@@ -45,8 +45,13 @@ public class ManageTrustAgentsPreferenceController extends BasePreferenceControl
 
     @Override
     public int getAvailabilityStatus() {
-        return mContext.getResources().getBoolean(R.bool.config_show_manage_trust_agents)
-                ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
+        // T-UIHIDE-KEYS / T-SEC-P2-LOCK: Trust agents preference + search hide.
+        if (!mContext.getResources().getBoolean(R.bool.config_show_manage_trust_agents)
+                || com.android.settings.guardtalk.GuardTalkLockPolicyHelper
+                        .isSmartLockBlocked(mContext)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
+        return AVAILABLE;
     }
 
     @Override

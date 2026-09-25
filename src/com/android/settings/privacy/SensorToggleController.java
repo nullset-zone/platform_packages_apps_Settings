@@ -22,10 +22,12 @@ import android.provider.DeviceConfig;
 import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
 import com.android.settings.R;
 import com.android.settings.core.TogglePreferenceController;
+import com.android.settings.guardtalk.GuardTalkSensorPrivacyHelper;
 import com.android.settings.utils.SensorPrivacyManagerHelper;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.RestrictedSwitchPreference;
@@ -75,20 +77,37 @@ public abstract class SensorToggleController extends TogglePreferenceController 
         return null;
     }
 
+    /** Default summary while the toggle is user-changeable. */
+    protected int getDefaultSummaryRes() {
+        return R.string.perm_toggle_description;
+    }
+
     @Override
     public int getAvailabilityStatus() {
-        return mSensorPrivacyManagerHelper.supportsSensorToggle(getSensor())
-                && (mIgnoreDeviceConfig || DeviceConfig.getBoolean(DeviceConfig.NAMESPACE_PRIVACY,
-                getDeviceConfigKey(), true)) ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
+        if (!mSensorPrivacyManagerHelper.supportsSensorToggle(getSensor())
+                || (!mIgnoreDeviceConfig && !DeviceConfig.getBoolean(
+                DeviceConfig.NAMESPACE_PRIVACY, getDeviceConfigKey(), true))) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
+        // Access already OFF + lockdown/locked: keep the row visible, disable turning ON.
+        if (!mIgnoreDeviceConfig && isSensorEnableBlocked() && !isChecked()) {
+            return DISABLED_DEPENDENT_SETTING;
+        }
+        return AVAILABLE;
     }
 
     @Override
     public boolean isChecked() {
+        // Camera/mic "access" ON means sensor privacy is OFF.
         return !mSensorPrivacyManagerHelper.isSensorBlocked(getSensor());
     }
 
     @Override
     public boolean setChecked(boolean isChecked) {
+        if (isChecked && !mIgnoreDeviceConfig && isSensorEnableBlocked()) {
+            refreshPreference();
+            return false;
+        }
         mSensorPrivacyManagerHelper.setSensorBlocked(getSensor(), !isChecked);
         return true;
     }
@@ -103,6 +122,17 @@ public abstract class SensorToggleController extends TogglePreferenceController 
         if (preference != null) {
             preference.setDisabledByAdmin(RestrictedLockUtilsInternal
                     .checkIfRestrictionEnforced(mContext, getRestriction(), mContext.getUserId()));
+            if (!mIgnoreDeviceConfig) {
+                applyGuardTalkAccessUi(preference);
+            }
+        }
+    }
+
+    @Override
+    public void updateState(Preference preference) {
+        super.updateState(preference);
+        if (preference != null && !mIgnoreDeviceConfig) {
+            applyGuardTalkAccessUi(preference);
         }
     }
 
@@ -113,7 +143,41 @@ public abstract class SensorToggleController extends TogglePreferenceController 
 
     @Override
     public void onSensorPrivacyChanged(int toggleType, int sensor, boolean blocked) {
-        updateState(mScreen.findPreference(mPreferenceKey));
+        refreshPreference();
+    }
+
+    private boolean isSensorEnableBlocked() {
+        return GuardTalkSensorPrivacyHelper.isSensorEnableBlocked(mContext);
+    }
+
+    private void refreshPreference() {
+        if (mScreen == null) {
+            return;
+        }
+        final Preference preference = mScreen.findPreference(mPreferenceKey);
+        if (preference != null) {
+            updateState(preference);
+        }
+    }
+
+    /**
+     * Keep access OFF reachable while unlocked. If lockdown/locked blocks turning
+     * sensors ON, disable the switch and show why (Law 3: no silent reject).
+     */
+    private void applyGuardTalkAccessUi(Preference preference) {
+        if (preference instanceof RestrictedSwitchPreference
+                && ((RestrictedSwitchPreference) preference).isDisabledByAdmin()) {
+            return;
+        }
+        final boolean accessOn = isChecked();
+        if (isSensorEnableBlocked() && !accessOn) {
+            preference.setEnabled(false);
+            preference.setSummary(GuardTalkSensorPrivacyHelper.getSensorEnableBlockedSummaryRes(
+                    mContext));
+            return;
+        }
+        preference.setEnabled(true);
+        preference.setSummary(getDefaultSummaryRes());
     }
 
     /**

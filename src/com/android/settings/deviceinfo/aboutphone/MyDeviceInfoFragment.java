@@ -235,13 +235,13 @@ public class MyDeviceInfoFragment extends DashboardFragment
         // TODO: There may be an avatar setting action we can use here.
         final int iconId = bundle != null ? bundle.getInt("icon_id", 0) : 0;
         if (iconId == 0) {
+            // F-BRAND-UI: Prefer GuardTalkOS About mark when the header is shown.
             final UserManager userManager = (UserManager) getActivity().getSystemService(
                     Context.USER_SERVICE);
             final UserInfo info = Utils.getExistingUser(userManager,
                     android.os.Process.myUserHandle());
             controller.setLabel(info.name);
-            controller.setIcon(
-                    com.android.settingslib.Utils.getUserIcon(getActivity(), userManager, info));
+            controller.setIcon(context.getDrawable(R.drawable.ic_guardtalk_logo));
         }
 
         controller.done(true /* rebindActions */);

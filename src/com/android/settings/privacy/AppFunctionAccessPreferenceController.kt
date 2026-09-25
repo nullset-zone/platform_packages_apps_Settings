@@ -28,6 +28,13 @@ import com.android.settings.core.BasePreferenceController
 class AppFunctionAccessPreferenceController(context: Context, preferenceKey: String) :
     BasePreferenceController(context, preferenceKey) {
     override fun getAvailabilityStatus(): Int {
+        // T-UIHIDE-KEYS: Privacy → Agents (app_function_access) overlay hide.
+        if (!mContext.resources.getBoolean(
+                com.android.settings.R.bool.config_show_app_function_access
+            )
+        ) {
+            return UNSUPPORTED_ON_DEVICE
+        }
         return if (AppFunctionAccessUtil.isAppFunctionAccessEnabled(mContext)) {
             AVAILABLE
         } else {

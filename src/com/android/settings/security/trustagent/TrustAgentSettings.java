@@ -54,5 +54,17 @@ public class TrustAgentSettings extends DashboardFragment {
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider(R.xml.trust_agent_settings);
+            new BaseSearchIndexProvider(R.xml.trust_agent_settings) {
+                @Override
+                protected boolean isPageSearchEnabled(Context context) {
+                    // T-UIHIDE-KEYS: suppress Trust agents page from Settings search.
+                    if (!context.getResources().getBoolean(
+                            R.bool.config_show_manage_trust_agents)
+                            || com.android.settings.guardtalk.GuardTalkLockPolicyHelper
+                                    .isSmartLockBlocked(context)) {
+                        return false;
+                    }
+                    return super.isPageSearchEnabled(context);
+                }
+            };
 }

@@ -484,6 +484,15 @@
     <!-- Whether trust_agent_click_intent should be shown or not. -->
     <bool name="config_show_trust_agent_click_intent">true</bool>
 
+    <!--
+      T-UIHIDE-KEYS: Privacy Agents / geodata-sharing / Health Connect UI+search.
+      Overlay via GuardTalkSettingsOverlay (false = hide). Hide ≠ delete APKs.
+      See vendor/guardtalk/docs/SETTINGS_VISIBILITY_POLICY.md.
+    -->
+    <bool name="config_show_app_function_access">true</bool>
+    <bool name="config_show_app_data_sharing_updates">true</bool>
+    <bool name="config_show_health_connect_settings">true</bool>
+
     <!-- Whether wallpaper attribution should be shown or not. -->
     <bool name="config_show_wallpaper_attribution">false</bool>
 

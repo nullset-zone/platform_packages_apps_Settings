@@ -4447,7 +4447,8 @@
     <string name="keywords_time_notification_category">notification, time, zone, timezone</string>
 
     <!-- Main settings screen, setting summary for the user to go into the About phone screen-->
-    <string name="about_settings_summary">View legal info, status, software version</string>
+    <!-- F-BRAND-UI: GuardTalkOS About summary (overlay mirrors this value). -->
+    <string name="about_settings_summary">View GuardTalkOS version, status, and device details</string>
     <!-- About phone settings screen, setting option name to go to dialog that shows legal info -->
     <string name="legal_information">Legal information</string>
     <!-- About phone settings screen, setting option name to show Manual [CHAR LIMIT=25] -->

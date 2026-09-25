@@ -35,6 +35,17 @@ public class PrivacyControlsFragment extends DashboardFragment {
     private static final String MIC_KEY = "privacy_mic_toggle";
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Code-created controllers are not auto-observed (XML duplicates are filtered).
+        // Bind ON_START/ON_STOP so switch state tracks SensorPrivacyManager.
+        getSettingsLifecycle().addObserver(use(CameraToggleController.class));
+        getSettingsLifecycle().addObserver(use(MicToggleController.class));
+        getSettingsLifecycle().addObserver(
+                use(ShowClipAccessNotificationPreferenceController.class));
+    }
+
+    @Override
     protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
         final List<AbstractPreferenceController> controllers = new ArrayList<>();
         controllers.add(new CameraToggleController(context, CAMERA_KEY));

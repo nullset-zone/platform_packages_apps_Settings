@@ -88,6 +88,13 @@ public class TrustAgentListPreferenceController extends AbstractPreferenceContro
 
     @Override
     public boolean isAvailable() {
+        // T-UIHIDE-KEYS / T-SEC-P2-LOCK: hide Smart Lock / trust-agent list rows.
+        if (com.android.settings.guardtalk.GuardTalkLockPolicyHelper
+                .isSmartLockBlocked(mContext)
+                || !mContext.getResources().getBoolean(
+                        R.bool.config_show_manage_trust_agents)) {
+            return false;
+        }
         return mContext.getResources().getBoolean(R.bool.config_show_trust_agent_click_intent);
     }
 

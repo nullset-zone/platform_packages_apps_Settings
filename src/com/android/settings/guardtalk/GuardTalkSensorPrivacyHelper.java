@@ -66,7 +66,15 @@ public final class GuardTalkSensorPrivacyHelper {
                 || GuardTalkSensorPrivacyPolicy.isLockdownFailClosedEnabled();
     }
 
-    /** True when sensors are currently force-denied by policy. */
+    /**
+     * True when sensors are currently force-denied by policy.
+     *
+     * <p>Gate 0 (DEC-OS-UX-001): use 4-arg {@code mustDenySensors} with
+     * {@link KeyguardManager#isKeyguardLocked()} as keyguardShowing. Do not
+     * pass stale {@code isDeviceLocked} as the lock-screen signal (3-arg
+     * overload aliases deviceLocked → keyguardShowing and false-positives
+     * while interactively unlocked).
+     */
     public static boolean areSensorsForceDenied(@NonNull Context context) {
         if (!isSensorPrivacyWhenLockedEnabled(context) && !isLockdownFailClosedEnabled(context)) {
             return false;
@@ -74,12 +82,13 @@ public final class GuardTalkSensorPrivacyHelper {
         final int userId = context.getUserId();
         final KeyguardManager km = context.getSystemService(KeyguardManager.class);
         final UserManager um = context.getSystemService(UserManager.class);
+        final boolean keyguardShowing = km != null && km.isKeyguardLocked();
         final boolean deviceLocked = km != null && km.isDeviceLocked(userId);
         final boolean userUnlocked = um != null && um.isUserUnlocked(userId);
         final LockPatternUtils lpu = new LockPatternUtils(context);
         final int strongAuth = lpu.getStrongAuthForUser(userId);
         return GuardTalkSensorPrivacyPolicy.mustDenySensors(
-                deviceLocked, userUnlocked, strongAuth);
+                keyguardShowing, deviceLocked, userUnlocked, strongAuth);
     }
 
     /** True when user lockdown strong-auth flag is set. */
@@ -87,5 +96,21 @@ public final class GuardTalkSensorPrivacyHelper {
         final LockPatternUtils lpu = new LockPatternUtils(context);
         return GuardTalkSensorPrivacyPolicy.isLockdownActive(
                 lpu.getStrongAuthForUser(context.getUserId()));
+    }
+
+    /**
+     * True when turning sensors ON (privacy OFF) would be rejected while
+     * locked, pre-first-unlock, or lockdown. Turning sensors OFF stays allowed.
+     */
+    public static boolean isSensorEnableBlocked(@NonNull Context context) {
+        return areSensorsForceDenied(context);
+    }
+
+    /** Visible reason when sensor access cannot be turned on. */
+    public static int getSensorEnableBlockedSummaryRes(@NonNull Context context) {
+        if (isLockdownActive(context)) {
+            return R.string.guardtalk_security_lockdown_summary_active;
+        }
+        return R.string.guardtalk_security_sensor_privacy_summary_locked;
     }
 }

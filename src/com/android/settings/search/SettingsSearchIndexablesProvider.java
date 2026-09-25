@@ -460,6 +460,11 @@ public class SettingsSearchIndexablesProvider extends PreferenceSearchIndexables
             // Skip Settings injected items because they should be indexed in the sub-pages.
             return false;
         }
+        // T-UIHIDE-KEYS: omit Health Connect from injected-tile Settings search.
+        if (com.android.settings.guardtalk.GuardTalkPrivacyVisibility
+                .shouldHideInjectedTile(getContext(), tile)) {
+            return false;
+        }
         return tile.isSearchable();
     }
 

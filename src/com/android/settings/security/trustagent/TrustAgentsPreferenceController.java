@@ -37,6 +37,7 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.TwoStatePreference;
 
 import com.android.internal.widget.LockPatternUtils;
+import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.security.SecurityFeatureProvider;
@@ -84,9 +85,10 @@ public class TrustAgentsPreferenceController extends BasePreferenceController
 
     @Override
     public int getAvailabilityStatus() {
-        // GuardTalkOS T-SEC-P2-LOCK: Smart Lock / trust agents blocked.
-        if (com.android.settings.guardtalk.GuardTalkLockPolicyHelper
-                .isSmartLockBlocked(mContext)) {
+        // T-UIHIDE-TRUST-BOOL / T-SEC-P2-LOCK: overlay hide + Smart Lock block.
+        if (!mContext.getResources().getBoolean(R.bool.config_show_manage_trust_agents)
+                || com.android.settings.guardtalk.GuardTalkLockPolicyHelper
+                        .isSmartLockBlocked(mContext)) {
             return UNSUPPORTED_ON_DEVICE;
         }
         return AVAILABLE;

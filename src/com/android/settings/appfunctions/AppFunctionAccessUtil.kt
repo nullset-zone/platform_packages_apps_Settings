@@ -23,6 +23,13 @@ import android.permission.flags.Flags
 /** AppFunctionsAccess specific utility functions */
 object AppFunctionAccessUtil {
     fun isAppFunctionAccessEnabled(context: Context): Boolean {
+        // T-UIHIDE-KEYS: Privacy → Agents overlay hide (all Settings agent UIs).
+        if (!context.resources.getBoolean(
+                com.android.settings.R.bool.config_show_app_function_access
+            )
+        ) {
+            return false
+        }
         val packageManager = context.getPackageManager()
         val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
         return Flags.appFunctionAccessApiEnabled() &&

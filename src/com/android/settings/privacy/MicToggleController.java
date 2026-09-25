@@ -22,6 +22,7 @@ import static com.android.settings.utils.SensorPrivacyManagerHelper.SENSOR_MICRO
 
 import android.content.Context;
 
+import com.android.settings.R;
 import com.android.settings.utils.SensorPrivacyManagerHelper;
 
 /**
@@ -50,5 +51,10 @@ public class MicToggleController extends SensorToggleController {
     @Override
     protected String getRestriction() {
         return DISALLOW_MICROPHONE_TOGGLE;
+    }
+
+    @Override
+    protected int getDefaultSummaryRes() {
+        return R.string.mic_toggle_description;
     }
 }

@@ -73,8 +73,8 @@ public class GuardTalkSensorPrivacyPreferenceController extends BasePreferenceCo
                         GuardTalkSensorPrivacyKeys.PREF_SENSOR_PRIVACY)) {
             return false;
         }
-        // Deep-link to platform privacy / mic toggle surface when available.
-        final Intent intent = new Intent(Settings.ACTION_PRIVACY_SETTINGS);
+        // Deep-link to Privacy Controls (camera/mic switches), not the dashboard.
+        final Intent intent = new Intent(Settings.ACTION_PRIVACY_CONTROLS);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
         return true;

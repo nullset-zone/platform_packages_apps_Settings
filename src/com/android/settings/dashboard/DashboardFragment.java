@@ -371,6 +371,11 @@ public abstract class DashboardFragment extends SettingsPreferenceFragment
      */
     @CallSuper
     protected boolean displayTile(Tile tile) {
+        // T-UIHIDE-KEYS: suppress Health Connect Privacy injected tile.
+        if (com.android.settings.guardtalk.GuardTalkPrivacyVisibility
+                .shouldHideInjectedTile(getContext(), tile)) {
+            return false;
+        }
         if (mSuppressInjectedTileKeys != null && tile.hasKey()) {
             // For suppressing injected tiles for OEMs.
             return !mSuppressInjectedTileKeys.contains(tile.getKey(getContext()));

@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
+import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 
 /**
@@ -52,6 +53,11 @@ public class AppDataSharingUpdatesPreferenceController extends BasePreferenceCon
 
     @Override
     public int getAvailabilityStatus() {
+        // T-UIHIDE-KEYS: Privacy → "Changes in geodata transmission" /
+        // "Data sharing updates for location" overlay hide + search.
+        if (!mContext.getResources().getBoolean(R.bool.config_show_app_data_sharing_updates)) {
+            return UNSUPPORTED_ON_DEVICE;
+        }
         return isPrivacySafetyLabelChangeNotificationsEnabled(mContext)
                 ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
     }
